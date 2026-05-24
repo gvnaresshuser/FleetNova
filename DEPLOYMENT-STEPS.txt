@@ -41,6 +41,258 @@ Run:
 
 git init
 =============================================================================
+STEP 3 — CREATE .gitignore 🚀
+
+Inside ROOT:
+
+FleetNova/.gitignore
+
+Add:
+
+node_modules
+.env
+dist
+build
+generated
+.prisma
+=============================================================================
+git status
+=============================================================================
+STEP 5 — COMMIT 🚀
+git commit -m "Initial FleetNova commit"
+=============================================================================
+https://github.com/
+gvnaresshuser
+
+echo "# FleetNova" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/gvnaresshuser/FleetNova.git
+git push -u origin main
+=============================================================================
+STEP 6 — CONNECT GITHUB 🚀🔥
+
+Replace YOUR_USERNAME.
+
+git remote add origin https://github.com/YOUR_USERNAME/FleetNova.git
+git remote add origin https://github.com/gvnaresshuser/FleetNova.git
+git remote add origin https://github.com/gvnaresshuser/FleetNova.git
+git branch -M main
+git push -u origin main
+=============================================================================
+STEP 7 — PUSH 🚀🔥
+git branch -M main
+git push -u origin main
+
+DONE ✅
+=============================================================================
+STEP 8 — DEPLOY BACKEND 🚀🔥
+
+Go to:
+
+Render
+https://render.com/
+g
+NARESSH GV
+gvnaressh@gmail.com
+
+CREATE WEB SERVICE 🚀
+
+Choose:
+
+fleetnova-backend
+=============================================================================
+STEP 8 — DEPLOY BACKEND 🚀🔥
+
+Go to:
+
+Render
+
+CREATE WEB SERVICE 🚀
+
+Choose:
+
+fleetnova-backend
+RENDER SETTINGS 🚀🔥
+| Setting        | Value             |
+| -------------- | ----------------- |
+| Runtime        | Node              |
+| Root Directory | fleetnova-backend |
+| Build Command  | npm install       |
+| Start Command  | npm start         |
+=============================================================================
+
+STEP 9 — ADD ENV VARIABLES 🚀🔥
+
+In Render Environment Variables:
+
+PORT=5000
+DATABASE_URL=postgresql://neondb_owner:npg_rlmW0aTedw8L@ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+JWT_SECRET=fleetnova_secret
+=============================================================================
+STEP 10 — CREATE POSTGRES DATABASE 🚀🔥 - ALREADY CREATED IN NEON DB
+
+Go to:
+
+Neon PostgreSQL
+
+Create DB.
+
+Copy:
+
+DATABASE_URL
+
+Paste into Render.
+=============================================================================
+STEP 11 — PRISMA MIGRATION 🚀🔥
+
+Inside backend terminal locally:
+
+npx prisma migrate deploy
+
+OR on Render shell:
+
+npx prisma migrate deploy
+=============================================================================
+=============================================================================
+=============================================================================
+STEP 12 — DEPLOY FRONTEND 🚀🔥
+
+Go to:
+
+render.com
+
+IMPORT GITHUB REPO 🚀
+
+Select:
+
+fleetnova-frontend
+=============================================================================
+FASTEST FIX 🚀🔥
+STEP 1 — OPEN package.json
+
+Inside:
+
+fleetnova-backend/package.json
+
+Find:
+
+"scripts"
+ADD THIS 🚀🔥
+"postinstall": "prisma generate"
+FINAL SCRIPTS 🚀🔥
+
+Should look like:
+
+"scripts": {
+
+    "start": "node server.js",
+
+    "dev": "nodemon server.js",
+
+    "postinstall": "prisma generate"
+
+}
+STEP 2 — PUSH TO GITHUB 🚀
+
+Run:
+
+git add .
+git commit -m "Fix Prisma generate on Render"
+git push
+STEP 3 — RENDER AUTO REDEPLOYS 🚀🔥
+
+Render will now automatically run:
+
+prisma generate
+
+during install.
+
+BUT THERE IS AN EVEN BETTER FIX 🚀🔥
+
+You should REMOVE this:
+
+output = "../generated/prisma"
+FROM schema.prisma 🚀
+
+Change:
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+TO 🚀🔥
+generator client {
+  provider = "prisma-client-js"
+}
+WHY 🚀
+
+Default Prisma location works BEST on:
+
+Render
+Railway
+Vercel
+Docker
+AWS
+
+Custom output paths often cause deployment issues.
+
+STEP 4 — UPDATE prisma.js 🚀🔥
+
+Inside:
+
+config/prisma.js
+
+Replace:
+
+from '../generated/prisma/client.js'
+WITH 🚀🔥
+from '@prisma/client'
+FINAL prisma.js 🚀🔥
+import { PrismaClient }
+    from '@prisma/client';
+
+const prisma =
+    new PrismaClient();
+
+export default prisma;
+STEP 5 — REGENERATE LOCALLY 🚀
+
+Inside backend:
+
+npx prisma generate
+STEP 6 — PUSH AGAIN 🚀🔥
+git add .
+git commit -m "Use default Prisma client"
+git push
+THIS IS THE BEST FIX 🚀🔥
+
+Because:
+✅ cleaner
+✅ production standard
+✅ works everywhere
+✅ easier deployment
+✅ no generated folder issues
+
+FINAL RESULT 🚀🔥
+
+Render deployment will now work properly.
+
+Your backend becomes LIVE 🚚🗺️📦
+=============================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>cd fleetnova-backend
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+
+=============================================================================
+STEP 6 — PUSH AGAIN 🚀🔥
+cd ..
+git add .
+git commit -m "Use default Prisma client"
+git push
 =============================================================================
 =============================================================================
 =============================================================================
@@ -55,6 +307,304 @@ git init
 =============================================================================
 =============================================================================
 =============================================================================
-=============================================================================
-=============================================================================
-=============================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git init
+Initialized empty Git repository in E:/MURALI/REACT-JS-CRASH-COURSE/FleetNova/.git/
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+warning: in the working copy of 'fleetnova-backend/.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/package-lock.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma.config.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260522042411_init/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260522064829_vehicle_model/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260522082501_driver_vehicle_relation/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260522084024_tracking_logs/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260523040132_orders_module/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260523042627_realtime_order_tracking/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/20260523045905_notifications_module/migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/migrations/migration_lock.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-backend/prisma/schema.prisma', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/eslint.config.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/package-lock.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/public/icons.svg', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/App copy.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/App.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/App.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/assets/vite.svg', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/index copy.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/src/main.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fleetnova-frontend/vite.config.js', LF will be replaced by CRLF the next time Git touches it
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   .gitignore
+        new file:   DEPLOYMENT-STEPS.txt
+        new file:   fleetnova-backend/.gitignore
+        new file:   fleetnova-backend/SCREENS/1-neon.png
+        new file:   fleetnova-backend/SCREENS/10-get single vehicle.png
+        new file:   fleetnova-backend/SCREENS/11-update single vehicle.png
+        new file:   fleetnova-backend/SCREENS/12-deletesingle vehicle.png
+        new file:   fleetnova-backend/SCREENS/13-Driver created-2.png
+        new file:   fleetnova-backend/SCREENS/13-Driver created.png
+        new file:   fleetnova-backend/SCREENS/14-driver-assigned-vehicle.png
+        new file:   fleetnova-backend/SCREENS/15-TEST TRACKING API-1.png
+        new file:   fleetnova-backend/SCREENS/15-TEST TRACKING API.png
+        new file:   fleetnova-backend/SCREENS/16-vehicles-frontend.png
+        new file:   fleetnova-backend/SCREENS/17-drivers-frontend.png
+        new file:   fleetnova-backend/SCREENS/18-dashboard-stats.png
+        new file:   fleetnova-backend/SCREENS/18-token.png
+        new file:   fleetnova-backend/SCREENS/19-analytics.png
+        new file:   fleetnova-backend/SCREENS/2-register.png
+        new file:   fleetnova-backend/SCREENS/20-create-order-1.png
+        new file:   fleetnova-backend/SCREENS/20-create-order.png
+        new file:   fleetnova-backend/SCREENS/21-get updated order.png
+        new file:   fleetnova-backend/SCREENS/3-login.png
+        new file:   fleetnova-backend/SCREENS/4-dashboard-without token.png
+        new file:   fleetnova-backend/SCREENS/5-dashboard-with token.png
+        new file:   fleetnova-backend/SCREENS/6-admin-dashboard.png
+        new file:   fleetnova-backend/SCREENS/7-driver-with-invalid-token.png
+        new file:   fleetnova-backend/SCREENS/8-vehicle created-use admin token.png
+        new file:   fleetnova-backend/SCREENS/8-vehicle created.png
+        new file:   fleetnova-backend/SCREENS/9-get all vehicles.png
+        new file:   "fleetnova-backend/SCREENS/FleetNova \342\200\224 Complete Application Flow & Features.png"
+        new file:   fleetnova-backend/SCREENS/PRISMA 7.txt
+        new file:   fleetnova-backend/SCREENS/STEPS.txt
+        new file:   fleetnova-backend/config/prisma.js
+        new file:   fleetnova-backend/controllers/analyticsController.js
+        new file:   fleetnova-backend/controllers/authController.js
+        new file:   fleetnova-backend/controllers/dashboardController.js
+        new file:   fleetnova-backend/controllers/driverController.js
+        new file:   fleetnova-backend/controllers/notificationController.js
+        new file:   fleetnova-backend/controllers/orderController.js
+        new file:   fleetnova-backend/controllers/trackingController.js
+        new file:   fleetnova-backend/controllers/vehicleController.js
+        new file:   fleetnova-backend/middleware/authMiddleware.js
+        new file:   fleetnova-backend/package-lock.json
+        new file:   fleetnova-backend/package.json
+        new file:   fleetnova-backend/prisma.config.ts
+        new file:   fleetnova-backend/prisma/migrations/20260522042411_init/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260522064829_vehicle_model/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260522082501_driver_vehicle_relation/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260522084024_tracking_logs/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260523040132_orders_module/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260523042627_realtime_order_tracking/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/20260523045905_notifications_module/migration.sql
+        new file:   fleetnova-backend/prisma/migrations/migration_lock.toml
+        new file:   fleetnova-backend/prisma/schema.prisma
+        new file:   fleetnova-backend/routes/analyticsRoutes.js
+        new file:   fleetnova-backend/routes/authRoutes.js
+        new file:   fleetnova-backend/routes/dashboardRoutes.js
+        new file:   fleetnova-backend/routes/driverRoutes.js
+        new file:   fleetnova-backend/routes/notificationRoutes.js
+        new file:   fleetnova-backend/routes/orderRoutes.js
+        new file:   fleetnova-backend/routes/orderTrackingRoutes.js
+        new file:   fleetnova-backend/routes/trackingRoutes.js
+        new file:   fleetnova-backend/routes/vehicleRoutes.js
+        new file:   fleetnova-backend/server.js
+        new file:   fleetnova-frontend/.gitignore
+        new file:   fleetnova-frontend/README.md
+        new file:   fleetnova-frontend/SCREENS/STEPS.txt
+        new file:   fleetnova-frontend/eslint.config.js
+        new file:   fleetnova-frontend/index.html
+        new file:   fleetnova-frontend/package-lock.json
+        new file:   fleetnova-frontend/package.json
+        new file:   fleetnova-frontend/public/favicon.svg
+        new file:   fleetnova-frontend/public/icons.svg
+        new file:   fleetnova-frontend/src/App copy.jsx
+        new file:   fleetnova-frontend/src/App.css
+        new file:   fleetnova-frontend/src/App.jsx
+        new file:   fleetnova-frontend/src/assets/hero.png
+        new file:   fleetnova-frontend/src/assets/react.svg
+        new file:   fleetnova-frontend/src/assets/vite.svg
+        new file:   fleetnova-frontend/src/charts/DriverPerformanceChart.jsx
+        new file:   fleetnova-frontend/src/charts/RevenueByDriverChart.jsx
+        new file:   fleetnova-frontend/src/charts/RevenueChart.jsx
+        new file:   fleetnova-frontend/src/charts/VehicleStatusChart.jsx
+        new file:   fleetnova-frontend/src/components/common/Loader.jsx
+        new file:   fleetnova-frontend/src/components/common/NotificationBell.jsx
+        new file:   fleetnova-frontend/src/components/common/PageTransition.jsx
+        new file:   fleetnova-frontend/src/index copy.css
+        new file:   fleetnova-frontend/src/index.css
+        new file:   fleetnova-frontend/src/layouts/MainLayout.jsx
+        new file:   fleetnova-frontend/src/main.jsx
+        new file:   fleetnova-frontend/src/pages/analytics/Analytics.jsx
+        new file:   fleetnova-frontend/src/pages/auth/Login.jsx
+        new file:   fleetnova-frontend/src/pages/dashboard/Dashboard.jsx
+        new file:   fleetnova-frontend/src/pages/drivers/Drivers.jsx
+        new file:   fleetnova-frontend/src/pages/orders/Orders.jsx
+        new file:   fleetnova-frontend/src/pages/orders/TrackOrder.jsx
+        new file:   fleetnova-frontend/src/pages/tracking/LiveTracking.jsx
+        new file:   fleetnova-frontend/src/pages/vehicles/Vehicles.jsx
+        new file:   fleetnova-frontend/src/routes/ProtectedRoute.jsx
+        new file:   fleetnova-frontend/src/services/api.js
+        new file:   fleetnova-frontend/vite.config.js
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   DEPLOYMENT-STEPS.txt
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "Initial FleetNova commit"
+[master (root-commit) a3ff046] Initial FleetNova commit
+ 101 files changed, 17437 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 DEPLOYMENT-STEPS.txt
+ create mode 100644 fleetnova-backend/.gitignore
+ create mode 100644 fleetnova-backend/SCREENS/1-neon.png
+ create mode 100644 fleetnova-backend/SCREENS/10-get single vehicle.png
+ create mode 100644 fleetnova-backend/SCREENS/11-update single vehicle.png
+ create mode 100644 fleetnova-backend/SCREENS/12-deletesingle vehicle.png
+ create mode 100644 fleetnova-backend/SCREENS/13-Driver created-2.png
+ create mode 100644 fleetnova-backend/SCREENS/13-Driver created.png
+ create mode 100644 fleetnova-backend/SCREENS/14-driver-assigned-vehicle.png
+ create mode 100644 fleetnova-backend/SCREENS/15-TEST TRACKING API-1.png
+ create mode 100644 fleetnova-backend/SCREENS/15-TEST TRACKING API.png
+ create mode 100644 fleetnova-backend/SCREENS/16-vehicles-frontend.png
+ create mode 100644 fleetnova-backend/SCREENS/17-drivers-frontend.png
+ create mode 100644 fleetnova-backend/SCREENS/18-dashboard-stats.png
+ create mode 100644 fleetnova-backend/SCREENS/18-token.png
+ create mode 100644 fleetnova-backend/SCREENS/19-analytics.png
+ create mode 100644 fleetnova-backend/SCREENS/2-register.png
+ create mode 100644 fleetnova-backend/SCREENS/20-create-order-1.png
+ create mode 100644 fleetnova-backend/SCREENS/20-create-order.png
+ create mode 100644 fleetnova-backend/SCREENS/21-get updated order.png
+ create mode 100644 fleetnova-backend/SCREENS/3-login.png
+ create mode 100644 fleetnova-backend/SCREENS/4-dashboard-without token.png
+ create mode 100644 fleetnova-backend/SCREENS/5-dashboard-with token.png
+ create mode 100644 fleetnova-backend/SCREENS/6-admin-dashboard.png
+ create mode 100644 fleetnova-backend/SCREENS/7-driver-with-invalid-token.png
+ create mode 100644 fleetnova-backend/SCREENS/8-vehicle created-use admin token.png
+ create mode 100644 fleetnova-backend/SCREENS/8-vehicle created.png
+ create mode 100644 fleetnova-backend/SCREENS/9-get all vehicles.png
+ create mode 100644 "fleetnova-backend/SCREENS/FleetNova \342\200\224 Complete Application Flow & Features.png"
+ create mode 100644 fleetnova-backend/SCREENS/PRISMA 7.txt
+ create mode 100644 fleetnova-backend/SCREENS/STEPS.txt
+ create mode 100644 fleetnova-backend/config/prisma.js
+ create mode 100644 fleetnova-backend/controllers/analyticsController.js
+ create mode 100644 fleetnova-backend/controllers/authController.js
+ create mode 100644 fleetnova-backend/controllers/dashboardController.js
+ create mode 100644 fleetnova-backend/controllers/driverController.js
+ create mode 100644 fleetnova-backend/controllers/notificationController.js
+ create mode 100644 fleetnova-backend/controllers/orderController.js
+ create mode 100644 fleetnova-backend/controllers/trackingController.js
+ create mode 100644 fleetnova-backend/controllers/vehicleController.js
+ create mode 100644 fleetnova-backend/middleware/authMiddleware.js
+ create mode 100644 fleetnova-backend/package-lock.json
+ create mode 100644 fleetnova-backend/package.json
+ create mode 100644 fleetnova-backend/prisma.config.ts
+ create mode 100644 fleetnova-backend/prisma/migrations/20260522042411_init/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260522064829_vehicle_model/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260522082501_driver_vehicle_relation/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260522084024_tracking_logs/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260523040132_orders_module/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260523042627_realtime_order_tracking/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/20260523045905_notifications_module/migration.sql
+ create mode 100644 fleetnova-backend/prisma/migrations/migration_lock.toml
+ create mode 100644 fleetnova-backend/prisma/schema.prisma
+ create mode 100644 fleetnova-backend/routes/analyticsRoutes.js
+ create mode 100644 fleetnova-backend/routes/authRoutes.js
+ create mode 100644 fleetnova-backend/routes/dashboardRoutes.js
+ create mode 100644 fleetnova-backend/routes/driverRoutes.js
+ create mode 100644 fleetnova-backend/routes/notificationRoutes.js
+ create mode 100644 fleetnova-backend/routes/orderRoutes.js
+ create mode 100644 fleetnova-backend/routes/orderTrackingRoutes.js
+ create mode 100644 fleetnova-backend/routes/trackingRoutes.js
+ create mode 100644 fleetnova-backend/routes/vehicleRoutes.js
+ create mode 100644 fleetnova-backend/server.js
+ create mode 100644 fleetnova-frontend/.gitignore
+ create mode 100644 fleetnova-frontend/README.md
+ create mode 100644 fleetnova-frontend/SCREENS/STEPS.txt
+ create mode 100644 fleetnova-frontend/eslint.config.js
+ create mode 100644 fleetnova-frontend/index.html
+ create mode 100644 fleetnova-frontend/package-lock.json
+ create mode 100644 fleetnova-frontend/package.json
+ create mode 100644 fleetnova-frontend/public/favicon.svg
+ create mode 100644 fleetnova-frontend/public/icons.svg
+ create mode 100644 fleetnova-frontend/src/App copy.jsx
+ create mode 100644 fleetnova-frontend/src/App.css
+ create mode 100644 fleetnova-frontend/src/App.jsx
+ create mode 100644 fleetnova-frontend/src/assets/hero.png
+ create mode 100644 fleetnova-frontend/src/assets/react.svg
+ create mode 100644 fleetnova-frontend/src/assets/vite.svg
+ create mode 100644 fleetnova-frontend/src/charts/DriverPerformanceChart.jsx
+ create mode 100644 fleetnova-frontend/src/charts/RevenueByDriverChart.jsx
+ create mode 100644 fleetnova-frontend/src/charts/RevenueChart.jsx
+ create mode 100644 fleetnova-frontend/src/charts/VehicleStatusChart.jsx
+ create mode 100644 fleetnova-frontend/src/components/common/Loader.jsx
+ create mode 100644 fleetnova-frontend/src/components/common/NotificationBell.jsx
+ create mode 100644 fleetnova-frontend/src/components/common/PageTransition.jsx
+ create mode 100644 fleetnova-frontend/src/index copy.css
+ create mode 100644 fleetnova-frontend/src/index.css
+ create mode 100644 fleetnova-frontend/src/layouts/MainLayout.jsx
+ create mode 100644 fleetnova-frontend/src/main.jsx
+ create mode 100644 fleetnova-frontend/src/pages/analytics/Analytics.jsx
+ create mode 100644 fleetnova-frontend/src/pages/auth/Login.jsx
+ create mode 100644 fleetnova-frontend/src/pages/dashboard/Dashboard.jsx
+ create mode 100644 fleetnova-frontend/src/pages/drivers/Drivers.jsx
+ create mode 100644 fleetnova-frontend/src/pages/orders/Orders.jsx
+ create mode 100644 fleetnova-frontend/src/pages/orders/TrackOrder.jsx
+ create mode 100644 fleetnova-frontend/src/pages/tracking/LiveTracking.jsx
+ create mode 100644 fleetnova-frontend/src/pages/vehicles/Vehicles.jsx
+ create mode 100644 fleetnova-frontend/src/routes/ProtectedRoute.jsx
+ create mode 100644 fleetnova-frontend/src/services/api.js
+ create mode 100644 fleetnova-frontend/vite.config.js
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
+================================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git remote add origin https://github.com/gvnaresshuser/FleetNova.git
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push -u origin main
+error: src refspec main does not match any
+error: failed to push some refs to 'https://github.com/gvnaresshuser/FleetNova.git'
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git branch -M main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push -u origin main
+Enumerating objects: 137, done.
+Counting objects: 100% (137/137), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (116/116), done.
+Writing objects: 100% (137/137), 6.11 MiB | 1.24 MiB/s, done.
+Total 137 (delta 27), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (27/27), done.
+To https://github.com/gvnaresshuser/FleetNova.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
