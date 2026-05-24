@@ -1,3 +1,15 @@
+------------------------------------------------
+------------------------------------------------
+LIVE BACKEND URL:
+=================
+https://fleetnova-backend.onrender.com
+
+LIVE FRONTEND URL:
+=================
+https://fleetnova-frontend.onrender.com
+------------------------------------------------
+------------------------------------------------
+
 Your structure is VERY GOOD for deployment.
 
 FleetNova/
@@ -505,8 +517,69 @@ the file gets copied into dist.
 
 This often works on Render as well.
 =============================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   DEPLOYMENT-STEPS.txt
+        new file:   DEPLOYMENT/10.png
+        modified:   DEPLOYMENT/4.png
+        new file:   DEPLOYMENT/6.png
+        new file:   DEPLOYMENT/7.png
+        new file:   DEPLOYMENT/8.png
+        new file:   DEPLOYMENT/9.png
+        new file:   fleetnova-frontend/public/_redirects
+        new file:   fleetnova-frontend/src/.env.production
+        modified:   fleetnova-frontend/src/services/api.js
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "redirect added"
+[main 5442357] redirect added
+ 10 files changed, 217 insertions(+), 1 deletion(-)
+ create mode 100644 DEPLOYMENT/10.png
+ create mode 100644 DEPLOYMENT/6.png
+ create mode 100644 DEPLOYMENT/7.png
+ create mode 100644 DEPLOYMENT/8.png
+ create mode 100644 DEPLOYMENT/9.png
+ create mode 100644 fleetnova-frontend/public/_redirects
+ create mode 100644 fleetnova-frontend/src/.env.production
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push
+Enumerating objects: 26, done.
+Counting objects: 100% (26/26), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (15/15), done.
+Writing objects: 100% (17/17), 703.79 KiB | 18.05 MiB/s, done.
+Total 17 (delta 4), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (4/4), completed with 3 local objects.
+To https://github.com/gvnaresshuser/FleetNova.git
+   376cd30..5442357  main -> main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 =============================================================================
+fleetnova-frontend
+
+Manual Deploy
+Service ID:
+srv-d89at9ugvqtc73bqg720
+
+gvnaresshuser / FleetNova
+main
+https://fleetnova-frontend.onrender.com
+
+May 24, 2026 at 1:27 PM
+live
+5442357
+redirect added
 =============================================================================
+LIVE FRONTEND URL:
+=================
+https://fleetnova-frontend.onrender.com
 =============================================================================
 =============================================================================
 =============================================================================
@@ -883,7 +956,36 @@ To https://github.com/gvnaresshuser/FleetNova.git
 
 E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 ================================================================================
+Run Prisma Studio
+
+Inside your backend folder:
+
+cd fleetnova-backend
+
+Run:
+
+npx prisma studio
+What Happens
+
+It starts a local web interface like:
+
+http://localhost:5555
+
+Open in browser.
+
+You can then:
+
+✅ View users table
+✅ Edit records
+✅ Delete rows
+✅ Add rows
+✅ Search/filter
+✅ Inspect relationships
 ================================================================================
+git add .
+git status
+git commit -m "Fix production socket URL"
+git push
 ================================================================================
 ================================================================================
 ================================================================================

@@ -18,7 +18,14 @@ import Loader from '../../components/common/Loader';
 import PageTransition from '../../components/common/PageTransition';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+//const socket = io('http://localhost:5000');
+const SOCKET_URL =
+    import.meta.env.VITE_SOCKET_URL ||
+    'http://localhost:5000';
+
+const socket = io(SOCKET_URL, {
+    transports: ['websocket', 'polling'],
+});
 const vehicleIcon = new L.Icon({
 
     iconUrl:

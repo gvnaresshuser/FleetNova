@@ -10,7 +10,15 @@ import L from 'leaflet';
 import io from 'socket.io-client';
 import PageTransition from '../../components/common/PageTransition';
 import API from '../../services/api';
-const socket = io('http://localhost:5000');
+
+//const socket = io('http://localhost:5000');
+const SOCKET_URL =
+    import.meta.env.VITE_SOCKET_URL ||
+    'http://localhost:5000';
+
+const socket = io(SOCKET_URL, {
+    transports: ['websocket', 'polling'],
+});
 
 const markerIcon = new L.Icon({
 
@@ -258,27 +266,27 @@ const LiveTracking = ({ startLoading }) => {
     }, []);
 
     return (
-<PageTransition>
-        <div>
+        <PageTransition>
+            <div>
 
-            <h1 className="text-2xl md:text-3xl font-bold mb-6">
+                <h1 className="text-2xl md:text-3xl font-bold mb-6">
 
-                Live Vehicle Tracking
+                    Live Vehicle Tracking
 
-            </h1>
+                </h1>
 
-            <div className="w-full h-[70vh] rounded-xl overflow-hidden shadow relative z-10">
+                <div className="w-full h-[70vh] rounded-xl overflow-hidden shadow relative z-10">
 
-                <MapContainer
+                    <MapContainer
                         center={[17.6868, 83.2185]}
-                    zoom={13}
-                    className="h-full w-full"
-                >
+                        zoom={13}
+                        className="h-full w-full"
+                    >
 
-                    <TileLayer
-                        attribution='&copy; OpenStreetMap'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
+                        <TileLayer
+                            attribution='&copy; OpenStreetMap'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
 
                         {
                             vehicles
@@ -289,18 +297,18 @@ const LiveTracking = ({ startLoading }) => {
                                 )
                                 .map((vehicle) => (
 
-                                <Marker
-                                    key={vehicle.id}
-                                    position={[
-                                        vehicle.latitude,
-                                        vehicle.longitude,
-                                    ]}
-                                    icon={
-                                        getMarkerIcon(
-                                            vehicle.status
-                                        )
-                                    }
-                                >
+                                    <Marker
+                                        key={vehicle.id}
+                                        position={[
+                                            vehicle.latitude,
+                                            vehicle.longitude,
+                                        ]}
+                                        icon={
+                                            getMarkerIcon(
+                                                vehicle.status
+                                            )
+                                        }
+                                    >
 
                                         <Popup>
 
@@ -425,17 +433,17 @@ const LiveTracking = ({ startLoading }) => {
 
                                         </Popup>
 
-                                </Marker>
+                                    </Marker>
 
-                            ))
+                                ))
                         }
 
-                </MapContainer>
+                    </MapContainer>
+
+                </div>
 
             </div>
-
-        </div>
-    </PageTransition>
+        </PageTransition>
     );
 
 };

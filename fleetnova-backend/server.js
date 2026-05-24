@@ -21,13 +21,28 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
+/* const io = new Server(server, {
     cors: {
         origin: '*',
     },
+}); */
+const io = new Server(server, {
+    cors: {
+        origin: [
+            process.env.CLIENT_URL,
+        ],
+        methods: ['GET', 'POST'],
+        credentials: true,
+    },
 });
 
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+    origin: [
+        process.env.CLIENT_URL,
+    ],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -50,59 +65,39 @@ app.get('/', (req, res) => {
     });
 
 });
+let vehicles = [];
 
 io.on('connection', (socket) => {
 
     console.log(`⚡ User Connected: ${socket.id}`);
-    /*   socket.on('send-location', async (data) => {
-  
-          console.log('Vehicle Location:', data);
-  
-          io.emit('receive-location', data);
-  
-      }); */
-    let vehicles = [];
 
-    io.on('connection', (socket) => {
+    socket.on('send-location', (data) => {
 
-        console.log(`⚡ User Connected: ${socket.id}`);
+        const existingVehicle = vehicles.find(
+            (v) => v.id === data.id
+        );
 
-        socket.on('send-location', (data) => {
+        if (existingVehicle) {
 
-            const existingVehicle =
-                vehicles.find(
-                    (v) => v.id === data.id
-                );
+            existingVehicle.latitude = data.latitude;
+            existingVehicle.longitude = data.longitude;
+            existingVehicle.status = data.status;
 
-            if (existingVehicle) {
+        } else {
 
-                existingVehicle.latitude =
-                    data.latitude;
+            vehicles.push(data);
 
-                existingVehicle.longitude =
-                    data.longitude;
+        }
 
-                existingVehicle.status =
-                    data.status;
+        io.emit('receive-vehicles', vehicles);
 
-            } else {
+        io.emit('receive-location', data);
 
-                vehicles.push(data);
+    });
 
-            }
+    socket.on('disconnect', () => {
 
-            io.emit(
-                'receive-vehicles',
-                vehicles
-            );
-
-        });
-
-        socket.on('disconnect', () => {
-
-            console.log(`❌ User Disconnected: ${socket.id}`);
-
-        });
+        console.log(`❌ User Disconnected: ${socket.id}`);
 
     });
 
