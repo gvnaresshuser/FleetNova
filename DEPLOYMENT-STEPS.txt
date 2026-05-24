@@ -291,17 +291,57 @@ E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
 STEP 6 — PUSH AGAIN 🚀🔥
 cd ..
 git add .
+git status
 git commit -m "Use default Prisma client"
 git push
 =============================================================================
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+npm install prisma @prisma/client
+=============================================================================
+npm uninstall @prisma/adapter-pg
+npx prisma generate
+=============================================================================
+git add .
+git commit -m "Fix Render deployment"
+git push
+=============================================================================
+npx prisma generate
+npx prisma migrate deploy
+npm start
+=============================================================================
+git add .
+git commit -m "Fix Render deployment again"
+git push
+=============================================================================
+rmdir /s /q node_modules
+del package-lock.json
+npm install
+npx prisma generate
+npm start
 =============================================================================
 =============================================================================
+npm install @prisma/adapter-pg pg
+npx prisma generate
+npm start
 =============================================================================
-=============================================================================
-=============================================================================
-=============================================================================
-=============================================================================
-=============================================================================
+import dotenv from 'dotenv';
+
+//import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaClient } from '@prisma/client';
+
+import { PrismaPg } from '@prisma/adapter-pg';
+
+dotenv.config();
+
+const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL,
+});
+
+const prisma = new PrismaClient({
+    adapter,
+});
+
+export default prisma;
 =============================================================================
 =============================================================================
 =============================================================================
@@ -586,6 +626,67 @@ branch 'main' set up to track 'origin/main'.
 E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 ================================================================================
 ================================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>cd fleetnova-backend
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\node_modules\@prisma\client in 798ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>cd ..
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+warning: in the working copy of 'fleetnova-backend/prisma/schema.prisma', LF will be replaced by CRLF the next time Git touches it
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   DEPLOYMENT-STEPS.txt
+        new file:   DEPLOYMENT/1.png
+        new file:   DEPLOYMENT/2.png
+        new file:   DEPLOYMENT/3.png
+        new file:   DEPLOYMENT/4.png
+        new file:   DEPLOYMENT/5.png
+        modified:   fleetnova-backend/config/prisma.js
+        modified:   fleetnova-backend/prisma/schema.prisma
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   DEPLOYMENT-STEPS.txt
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "Use default Prisma client"
+[main 687aed2] Use default Prisma client
+ 8 files changed, 553 insertions(+), 3 deletions(-)
+ create mode 100644 DEPLOYMENT/1.png
+ create mode 100644 DEPLOYMENT/2.png
+ create mode 100644 DEPLOYMENT/3.png
+ create mode 100644 DEPLOYMENT/4.png
+ create mode 100644 DEPLOYMENT/5.png
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push
+Enumerating objects: 21, done.
+Counting objects: 100% (21/21), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (13/13), done.
+Writing objects: 100% (14/14), 620.10 KiB | 14.76 MiB/s, done.
+Total 14 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/gvnaresshuser/FleetNova.git
+   a3ff046..687aed2  main -> main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 ================================================================================
 ================================================================================
 ================================================================================
