@@ -1,0 +1,6 @@
+@import "tailwindcss";
+.leaflet-popup-content {
+
+    margin: 8px 10px !important;
+
+}

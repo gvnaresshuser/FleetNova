@@ -1,0 +1,1305 @@
+mkdir fleetnova-backend
+cd fleetnova-backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+npm install morgan
+
+START SERVER
+npm run dev
+===========================================================================================
+npm install bcryptjs jsonwebtoken prisma @prisma/client socket.io
+===========================================================================================
+fleetnova-backend/
+│
+├── config/
+├── controllers/
+├── middleware/
+├── routes/
+├── services/
+├── utils/
+├── socket/
+├── server.js
+├── .env
+└── package.json
+===========================================================================================
+npx prisma init
+===========================================================================================
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma init
+
+Initialized Prisma in your project
+
+  prisma/
+    schema.prisma
+  prisma.config.ts
+  .gitignore
+
+warn Prisma would have added DATABASE_URL but it already exists in .env.
+
+Next, choose how you want to set up your database:
+
+CONNECT EXISTING DATABASE:
+  1. Configure your DATABASE_URL in prisma.config.ts
+  2. Run prisma db pull to introspect your database.
+
+CREATE NEW DATABASE:
+  Local: npx prisma dev (runs Postgres locally in your terminal)
+  Cloud: npx create-db (creates a free Prisma Postgres database)
+
+Then, define your models in prisma/schema.prisma and run prisma migrate dev to apply your schema.
+
+Learn more: https://pris.ly/getting-started
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+===========================================================================================
+npx prisma migrate dev --name init
+===========================================================================================
+https://neon.com/
+Login Google
+gvnaressh@gmail.com
+
+postgresql://neondb_owner:npg_rlmW0aTedw8L@ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+===========================================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma migrate dev --name init
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech"
+
+Applying migration `20260522042411_init`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma\migrations/
+  └─ 20260522042411_init/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+===========================================================================================
+npx prisma generate
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\node_modules\@prisma\client in 847ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+===========================================================================================
+npm run dev
+===========================================================================================
+package.json
+"type": "module",
+===========================================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm run dev
+
+> fleetnova-backend@1.0.0 dev
+> nodemon server.js
+
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node server.js`
+◇ injected env (3) from .env // tip: ⌘ enable debugging { debug: true }
+🚀 Server running on port 5000
+
+===========================================================================================
+http://localhost:5000/
+{
+  "success": true,
+  "message": "FleetNova Backend Running Successfully"
+}
+===========================================================================================
+Step 5 — Create Prisma Client Config
+
+Create:
+
+config/prisma.js
+config/prisma.js
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export default prisma;
+===========================================================================================
+You absolutely can use Prisma 7 👍
+
+The issue is only because Prisma 7 now expects a slightly different configuration style.
+
+Your current error happened because:
+
+* Prisma 7 uses `prisma.config.ts`
+* datasource URL handling changed
+* Prisma Client initialization behavior changed
+
+---
+
+# Proper Prisma 7 Setup (Recommended)
+
+# Step 1 — Keep `prisma.config.ts`
+
+Your existing file is correct:
+
+```javascript id="ovf8ca"
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: process.env["DATABASE_URL"],
+  },
+});
+```
+
+---
+
+# Step 2 — Update `schema.prisma`
+
+IMPORTANT:
+
+In Prisma 7 you should NOT put:
+
+```prisma id="mzc1fq"
+url = env("DATABASE_URL")
+```
+
+because config already handles it.
+
+Use this:
+
+```prisma id="5wd1lk"
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
+}
+```
+
+---
+
+# Step 3 — Generate Client Again
+
+```bash id="m29kr7"
+npx prisma generate
+```
+
+---
+
+# Step 4 — Update Prisma Import
+
+Because Prisma 7 generates client into custom output folder:
+
+Create:
+
+## `config/prisma.js`
+
+```javascript id="8xv0eh"
+import { PrismaClient } from '../generated/prisma/index.js';
+
+const prisma = new PrismaClient();
+
+export default prisma;
+```
+
+---
+
+# IMPORTANT
+
+This is the key difference.
+
+In Prisma 6:
+
+```javascript id="lg8vl4"
+import { PrismaClient } from '@prisma/client';
+```
+
+In Prisma 7:
+
+```javascript id="nbvx2n"
+import { PrismaClient } from '../generated/prisma/index.js';
+```
+
+because the generated client location changed.
+
+---
+
+# Step 5 — Keep ES6 Express Server
+
+## `server.js`
+
+```javascript id="n74h6j"
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import morgan from 'morgan';
+
+import prisma from './config/prisma.js';
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
+
+app.get('/', async (req, res) => {
+
+    const users = await prisma.user.findMany();
+
+    res.status(200).json({
+        success: true,
+        message: 'FleetNova Backend Running Successfully',
+        users
+    });
+
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
+```
+
+---
+
+# Step 6 — Start Backend
+
+```bash id="3mzciq"
+npm run dev
+```
+
+---
+
+# Why Prisma 7 is Different
+
+Prisma 7 introduced:
+
+* external generated client
+* new config system
+* stricter runtime initialization
+* more modular architecture
+
+This is actually better for enterprise applications.
+
+---
+
+# Recommendation
+
+## For Learning Simplicity
+
+Use:
+
+* Prisma 6
+
+## For Modern Enterprise Stack
+
+Use:
+
+* Prisma 7
+
+Since FleetNova is intended to be advanced and enterprise-grade, Prisma 7 is perfectly fine if configured correctly 🚀
+
+===========================================================================================
+REGISTER:
+========
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Naresh",
+  "email": "naresh@gmail.com",
+  "password": "123456",
+  "role": "ADMIN"
+}
+-----------------
+{
+  "success": true,
+  "message": "User registered successfully",
+  "user": {
+    "id": 1,
+    "name": "Naresh",
+    "email": "naresh@gmail.com",
+    "password": "$2b$10$Ur1dzZufR9ds/Zjdz9bLQ.5sHFcJZuJ4ihgfiWMXLtSeEwYA2IzQu",
+    "role": "ADMIN",
+    "createdAt": "2026-05-22T06:22:23.824Z"
+  }
+}
+===========================================================================================
+LOGIN:
+=====
+Test Login API
+POST http://localhost:5000/api/auth/login
+BODY
+{
+  "email": "naresh@gmail.com",
+  "password": "123456"
+}
+Expected Response
+{
+  "success": true,
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y",
+  "user": {
+    "id": 1,
+    "name": "Naresh",
+    "email": "naresh@gmail.com",
+    "role": "ADMIN"
+  }
+}
+===========================================================================================
+Test Protected API
+GET http://localhost:5000/api/dashboard
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+===========================================================================================
+Test Admin Route
+GET
+http://localhost:5000/api/admin
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+===========================================================================================
+TEST ROLE BLOCKING
+
+Later create another user:
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Driver User",
+  "email": "driver@gmail.com",
+  "password": "123456",
+  "role": "DRIVER"
+}
+----------------
+{
+  "success": true,
+  "message": "User registered successfully",
+  "user": {
+    "id": 2,
+    "name": "Driver User",
+    "email": "driver@gmail.com",
+    "role": "DRIVER",
+    "createdAt": "2026-05-22T06:38:11.166Z"
+  }
+}
+ANOTHER DRIVER
+Later create another user:
+POST http://localhost:5000/api/auth/register
+{
+  "name": "Driver2 User",
+  "email": "driver2@gmail.com",
+  "password": "123456",
+  "role": "DRIVER"
+}
+-------------------
+{
+  "success": true,
+  "message": "User registered successfully",
+  "user": {
+    "id": 3,
+    "name": "Driver2 User",
+    "email": "driver2@gmail.com",
+    "password": "$2b$10$WXpjW/t.YXRxcrWbbZjL9.v0hQBzdCtLZzeq2069dfUiYKxLiy9Sm",
+    "role": "DRIVER",
+    "createdAt": "2026-05-22T06:39:54.100Z"
+  }
+}
+----------------------
+Test Login API
+POST http://localhost:5000/api/auth/login
+BODY
+{
+  "email": "driver@gmail.com",
+  "password": "123456"
+}
+-------------------------
+{
+  "success": true,
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3OTQzMjA3MCwiZXhwIjoxNzgwMDM2ODcwfQ.RM3-2EdInxcQTKN_u3xqpx6Ex74a5viySUWmYB3ktjA",
+  "user": {
+    "id": 2,
+    "name": "Driver User",
+    "email": "driver@gmail.com",
+    "role": "DRIVER"
+  }
+}
+Login with DRIVER token and test /api/admin
+Test Admin Route
+GET
+http://localhost:5000/api/admin
+
+THIS IS ADMIN TOKEN - SHOULD WORK
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+
+{
+  "success": true,
+  "message": "Welcome Admin"
+}
+=================================================
+
+USE DRIVER TOKEN - SHOULD NOT WORK
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3OTQzMjA3MCwiZXhwIjoxNzgwMDM2ODcwfQ.RM3-2EdInxcQTKN_u3xqpx6Ex74a5viySUWmYB3ktjA
+
+{
+  "success": false,
+  "message": "Role (DRIVER) is not allowed"
+}
+===========================================================================================
+That means your Role-Based Access Control (RBAC) is working correctly.
+===========================================================================================
+NEXT STEP — VEHICLE MODULE 🚚
+
+Now we begin actual logistics features.
+===========================================================================================
+STEP 1 — Add Vehicle Model
+Open:
+prisma/schema.prisma
+Add below User
+===========================================================================================
+STEP 2 — Run Migration
+npx prisma migrate dev --name vehicle_model
+------------------------
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma migrate dev --name vehicle_model
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech"
+
+Applying migration `20260522064829_vehicle_model`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma\migrations/
+  └─ 20260522064829_vehicle_model/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+------------------------
+===========================================================================================
+STEP 3 — Generate Prisma Client
+npx prisma generate
+----------------------
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\generated\prisma in 104ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+----------------------
+===========================================================================================
+STEP 4 — Create Vehicle Controller
+Create:
+controllers/vehicleController.js
+===========================================================================================
+STEP 5 — Add Vehicle APIs
+controllers/vehicleController.js
+===========================================================================================
+STEP 6 — Create Vehicle Routes
+Create:
+routes/vehicleRoutes.js
+===========================================================================================
+STEP 7 — Connect Routes
+Update:
+server.js
+import vehicleRoutes from './routes/vehicleRoutes.js';
+Add:
+app.use('/api/vehicles', vehicleRoutes);
+===========================================================================================
+STEP 9 — Test Create Vehicle API
+POST
+http://localhost:5000/api/vehicles
+Headers
+Authorization: Bearer ADMIN_TOKEN
+THIS IS ADMIN TOKEN - SHOULD WORK
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+
+Request Body
+{
+  "vehicleNumber": "AP39AB1234",
+  "vehicleType": "Truck",
+  "fuelType": "Diesel",
+  "latitude": 17.6868,
+  "longitude": 83.2185,
+  "status": "ACTIVE"
+}
+Expected Response
+{
+  "success": true,
+  "message": "Vehicle created successfully",
+  "vehicle": {
+    "id": 1,
+    "vehicleNumber": "AP39AB1234",
+    "vehicleType": "Truck",
+    "fuelType": "Diesel",
+    "latitude": 17.6868,
+    "longitude": 83.2185,
+    "status": "ACTIVE",
+    "createdAt": "2026-05-22T06:55:33.577Z"
+  }
+}
+===========================================================================================
+NEXT STEP — GET VEHICLES API 🚚
+
+Now test:
+
+GET
+http://localhost:5000/api/vehicles
+Headers
+Authorization: Bearer YOUR_TOKEN
+Expected Response
+{
+  "success": true,
+  "vehicles": [
+    {
+      "id": 1,
+      "vehicleNumber": "AP39AB1234",
+      "vehicleType": "Truck",
+      "fuelType": "Diesel",
+      "latitude": 17.6868,
+      "longitude": 83.2185,
+      "status": "ACTIVE",
+      "createdAt": "2026-05-22T06:55:33.577Z"
+    }
+  ]
+}
+===========================================================================================
+STEP 4 — Test Single Vehicle API
+GET
+http://localhost:5000/api/vehicles/1
+===========================================================================================
+TEST UPDATE API
+PUT
+http://localhost:5000/api/vehicles/1
+Headers
+Authorization: Bearer YOUR_ADMIN_TOKEN
+Request Body
+{
+  "vehicleNumber": "AP39XY9999",
+  "vehicleType": "Container Truck",
+  "fuelType": "Diesel",
+  "latitude": 17.7000,
+  "longitude": 83.3000,
+  "status": "INACTIVE"
+}
+--------------------------------------------
+TEST DELETE API
+DELETE
+http://localhost:5000/api/vehicles/1
+Expected Delete Response
+{
+  "success": true,
+  "message": "Vehicle deleted successfully"
+}
+===========================================================================================
+CREATE ANOTHER VEHICLE
+POST
+http://localhost:5000/api/vehicles
+{
+  "success": true,
+  "message": "Vehicle created successfully",
+  "vehicle": {
+    "id": 2,
+    "vehicleNumber": "AP39AB1234",
+    "vehicleType": "Truck",
+    "fuelType": "Diesel",
+    "latitude": 17.6868,
+    "longitude": 83.2185,
+    "status": "ACTIVE",
+    "createdAt": "2026-05-22T07:08:37.522Z"
+  }
+}
+===========================================================================================
+NEXT MODULE — DRIVER MANAGEMENT
+
+
+model Vehicle {
+  id            Int      @id @default(autoincrement())
+  vehicleNumber String   @unique
+  vehicleType   String
+  fuelType      String
+  latitude      Float?
+  longitude     Float?
+  status        String
+  driverId      Int?     @unique
+  driver        Driver?  @relation(fields: [driverId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model Driver {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  mobile       String
+  licenseNumber String  @unique
+  experience   Int
+  status       String
+  vehicle       Vehicle?
+  createdAt    DateTime @default(now())
+}
+
+npx prisma migrate dev --name driver_vehicle_relation
+npx prisma generate
+-------------------------------------------
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>code .
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>cd fleetnova-backend
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm run dev
+
+> fleetnova-backend@1.0.0 dev
+> nodemon server.js
+
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node server.js`
+◇ injected env (3) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+🚀 Server running on port 5000
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma migrate dev --name driver_vehicle_relation
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech"
+
+
+⚠️  Warnings for the current datasource:
+
+  • A unique constraint covering the columns `[driverId]` on the table `Vehicle` will be added. If there are existing duplicate values, this will fail.
+
+√ Are you sure you want to create and apply this migration? ... yes
+Applying migration `20260522082501_driver_vehicle_relation`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma\migrations/
+  └─ 20260522082501_driver_vehicle_relation/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\generated\prisma in 664ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+-------------------------------------------
+===========================================================================================
+IMPORTANT 🚀
+
+Notice:
+
+include: {
+   vehicle: true
+}
+
+This is Prisma JOIN functionality.
+
+Equivalent SQL:
+
+SELECT *
+FROM drivers
+LEFT JOIN vehicles
+ON drivers.id = vehicles.driverId;
+
+Now FleetNova is entering real relational database design.
+===========================================================================================
+STEP 11 — TEST CREATE DRIVER API
+POST
+http://localhost:5000/api/drivers
+THIS IS ADMIN TOKEN - SHOULD WORK
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+
+Request Body
+{
+  "name": "Ramesh",
+  "email": "ramesh@gmail.com",
+  "mobile": "9876543210",
+  "licenseNumber": "DL12345678",
+  "experience": 5,
+  "status": "ACTIVE"
+}
+--------------
+{
+  "success": true,
+  "message": "Driver created successfully",
+  "driver": {
+    "id": 1,
+    "name": "Ramesh",
+    "email": "ramesh@gmail.com",
+    "mobile": "9876543210",
+    "licenseNumber": "DL12345678",
+    "experience": 5,
+    "status": "ACTIVE",
+    "createdAt": "2026-05-22T08:26:39.744Z"
+  }
+}
+--------------
+STEP 12 — TEST GET DRIVERS API
+GET
+http://localhost:5000/api/drivers
+--------------
+{
+  "success": true,
+  "drivers": [
+    {
+      "id": 1,
+      "name": "Ramesh",
+      "email": "ramesh@gmail.com",
+      "mobile": "9876543210",
+      "licenseNumber": "DL12345678",
+      "experience": 5,
+      "status": "ACTIVE",
+      "createdAt": "2026-05-22T08:26:39.744Z",
+      "vehicle": null
+    }
+  ]
+}
+--------------
+===========================================================================================
+Your Driver module is now working perfectly.
+
+Notice this response:
+
+"vehicle": null
+
+This is actually VERY IMPORTANT.
+
+It means:
+
+the relationship is working correctly
+but no vehicle is assigned yet
+
+So now we move into:
+
+DRIVER ↔ VEHICLE ASSIGNMENT 🚚👨‍✈️
+
+This is where FleetNova becomes a true relational logistics platform.
+===========================================================================================
+GOAL
+
+Assign:
+
+Driver → Vehicle
+
+Example:
+
+Ramesh → AP39AB1234
+===========================================================================================
+STEP 1 — CREATE ASSIGN DRIVER API
+
+Open:
+
+controllers/vehicleController.js
+
+Add below deleteVehicle:
+===========================================================================================
+TEST ASSIGN DRIVER API
+PUT
+http://localhost:5000/api/vehicles/assign-driver
+Request Body
+{
+  "vehicleId": 1,
+  "driverId": 1
+}
+EXPECTED RESPONSE
+{
+  "success": true,
+  "message": "Driver assigned successfully",
+  "vehicle": {
+    "id": 1,
+    "vehicleNumber": "AP39AB1234",
+    "driverId": 1,
+
+    "driver": {
+      "id": 1,
+      "name": "Ramesh",
+      "email": "ramesh@gmail.com"
+    }
+  }
+}
+===========================================================================================
+PUT
+http://localhost:5000/api/vehicles/assign-driver
+{
+  "vehicleId": 2,
+  "driverId": 1
+}
+{
+  "success": true,
+  "message": "Driver assigned successfully",
+  "vehicle": {
+    "id": 2,
+    "vehicleNumber": "AP39AB1234",
+    "vehicleType": "Truck",
+    "fuelType": "Diesel",
+    "latitude": 17.6868,
+    "longitude": 83.2185,
+    "status": "ACTIVE",
+    "driverId": 1,
+    "createdAt": "2026-05-22T07:08:37.522Z",
+    "driver": {
+      "id": 1,
+      "name": "Ramesh",
+      "email": "ramesh@gmail.com",
+      "mobile": "9876543210",
+      "licenseNumber": "DL12345678",
+      "experience": 5,
+      "status": "ACTIVE",
+      "createdAt": "2026-05-22T08:26:39.744Z"
+    }
+  }
+===========================================================================================
+TEST GET DRIVERS AGAIN
+GET
+http://localhost:5000/api/drivers
+-----------------
+{
+  "success": true,
+  "drivers": [
+    {
+      "id": 1,
+      "name": "Ramesh",
+      "email": "ramesh@gmail.com",
+      "mobile": "9876543210",
+      "licenseNumber": "DL12345678",
+      "experience": 5,
+      "status": "ACTIVE",
+      "createdAt": "2026-05-22T08:26:39.744Z",
+      "vehicle": {
+        "id": 2,
+        "vehicleNumber": "AP39AB1234",
+        "vehicleType": "Truck",
+        "fuelType": "Diesel",
+        "latitude": 17.6868,
+        "longitude": 83.2185,
+        "status": "ACTIVE",
+        "driverId": 1,
+        "createdAt": "2026-05-22T07:08:37.522Z"
+      }
+    }
+-----------------
+===========================================================================================
+Excellent 🚀🔥
+Now the relationship is working perfectly.
+
+You successfully implemented:
+
+DRIVER ↔ VEHICLE RELATIONSHIP
+
+Your response proves:
+
+"driverId": 1
+
+and:
+
+"vehicle": {
+   "vehicleNumber": "AP39AB1234"
+}
+
+This means:
+
+PostgreSQL foreign keys are working
+Prisma relations are working
+JOIN queries are working
+relational database design is working
+
+FleetNova is now entering true enterprise architecture 🚚📊
+===========================================================================================
+NEXT MASSIVE MODULE 🚀
+TRACKING LOGS + LIVE GPS TRACKING 🗺️
+
+Now we build:
+
+vehicle movement history
+live coordinates
+realtime updates
+
+This is where maps become powerful.
+===========================================================================================
+GOAL
+
+Store movement history like:
+
+Vizag → Rajahmundry → Vijayawada → Hyderabad
+
+with:
+
+latitude
+longitude
+speed
+timestamps
+===========================================================================================
+ADD TRACKING MODEL
+
+Open:
+
+prisma/schema.prisma
+
+Add below Driver model:
+===========================================================================================
+model TrackingLog {
+  id        Int      @id @default(autoincrement())
+  vehicleId Int
+  latitude  Float
+  longitude Float
+  speed     Float
+  location  String
+  createdAt DateTime @default(now())
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+===========================================================================================
+UPDATE VEHICLE MODEL
+
+Add inside Vehicle model:
+
+trackingLogs TrackingLog[]
+===========================================================================================
+
+model Vehicle {
+  id            Int           @id @default(autoincrement())
+  vehicleNumber String        @unique
+  vehicleType   String
+  fuelType      String
+  latitude      Float?
+  longitude     Float?
+  status        String
+  driverId      Int?          @unique
+  driver        Driver?       @relation(fields: [driverId], references: [id])
+  trackingLogs  TrackingLog[]
+  createdAt     DateTime      @default(now())
+}
+===========================================================================================
+STEP 3 — RUN MIGRATION
+npx prisma migrate dev --name tracking_logs
+===========================================================================================
+STEP 4 — GENERATE PRISMA CLIENT
+npx prisma generate
+===========================================================================================
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma migrate dev --name tracking_logs
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-billowing-pond-apfja5e3.c-7.us-east-1.aws.neon.tech"
+
+Applying migration `20260522084024_tracking_logs`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma\migrations/
+  └─ 20260522084024_tracking_logs/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npx prisma generate
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\generated\prisma in 286ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+===========================================================================================
+CREATE TRACKING CONTROLLER
+Create:
+controllers/trackingController.js
+===========================================================================================
+STEP 6 — ADD CREATE TRACKING API
+controllers/trackingController.js
+===========================================================================================
+STEP 7 — GET TRACKING LOGS
+
+Add below:
+
+export const getTrackingLogs = async (req, res) => 
+===========================================================================================
+STEP 8 — CREATE ROUTES
+
+Create:
+
+routes/trackingRoutes.js
+===========================================================================================
+STEP 9 — CONNECT ROUTES
+
+Update:
+
+server.js
+
+Import:
+
+import trackingRoutes from './routes/trackingRoutes.js';
+
+Add:
+
+app.use('/api/tracking', trackingRoutes);
+===========================================================================================
+STEP 10 — RESTART SERVER
+npm run dev
+===========================================================================================
+STEP 11 — TEST TRACKING API
+THIS IS ADMIN TOKEN - SHOULD WORK
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NDMxMjI4LCJleHAiOjE3ODAwMzYwMjh9.r1ryWP31gB6jA77AcNeBaE8mmQtPbP__0AB8_RhuL1Y
+POST
+http://localhost:5000/api/tracking
+Request Body
+{
+  "vehicleId": 2,
+  "latitude": 17.7231,
+  "longitude": 83.3012,
+  "speed": 62.5,
+  "location": "Vizag Highway"
+}
+EXPECTED RESPONSE
+{
+  "success": true,
+  "message": "Tracking log added successfully"
+}
+===========================================================================================
+STEP 12 — TEST GET TRACKING LOGS
+GET
+http://localhost:5000/api/tracking/2
+----------------
+{
+  "success": true,
+  "trackingLogs": [
+    {
+      "id": 1,
+      "vehicleId": 2,
+      "latitude": 17.7231,
+      "longitude": 83.3012,
+      "speed": 62.5,
+      "location": "Vizag Highway",
+      "createdAt": "2026-05-22T08:44:25.656Z",
+      "vehicle": {
+        "id": 2,
+        "vehicleNumber": "AP39AB1234",
+        "vehicleType": "Truck",
+        "fuelType": "Diesel",
+        "latitude": 17.7231,
+        "longitude": 83.3012,
+        "status": "ACTIVE",
+        "driverId": 1,
+        "createdAt": "2026-05-22T07:08:37.522Z"
+      }
+    }
+  ]
+  ----------------
+===========================================================================================
+HUGE ENTERPRISE MILESTONE 🚀
+
+You now built:
+
+✅ Vehicle Tracking
+✅ GPS Coordinates
+✅ Tracking History
+✅ Relational PostgreSQL Design
+✅ One-to-Many Relationships
+✅ Fleet Movement Logs
+✅ Enterprise Logistics Data Model
+===========================================================================================
+NEXT MASSIVE FEATURE 🚀
+
+Now we are ready for:
+
+LIVE REALTIME TRACKING
+
+Using:
+
+Socket.IO
+Leaflet
+React frontend maps
+
+Vehicles will move LIVE on maps in realtime 🚚🗺️
+===========================================================================================
+REALTIME ARCHITECTURE
+Vehicle GPS Device
+        ↓
+Socket.IO Backend
+        ↓
+PostgreSQL Tracking Logs
+        ↓
+React Frontend Map
+        ↓
+Live Moving Vehicle Marker
+===========================================================================================
+STEP 1 — INSTALL SOCKET.IO BACKEND
+
+Inside backend:
+
+npm install socket.io
+===========================================================================================
+UPDATE server.js
+
+Replace entire file with:
+
+server.js
+===========================================================================================
+STEP 3 — START BACKEND
+npm run dev
+EXPECTED
+
+When frontend connects:
+
+⚡ User Connected
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================================================================================
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>mkdir fleetnova-backend
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>cd fleetnova-backend
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm init -y
+Wrote to E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend\package.json:
+
+{
+  "name": "fleetnova-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm install express pg cors dotenv
+
+added 83 packages, and audited 84 packages in 5s
+
+26 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm install nodemon --save-dev
+
+added 26 packages, and audited 110 packages in 4s
+
+31 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>npm install morgan
+
+added 7 packages, and audited 117 packages in 1s
+
+31 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova\fleetnova-backend>
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
