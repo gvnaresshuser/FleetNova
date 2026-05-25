@@ -1096,6 +1096,48 @@ THEN RUN 🚀🔥
 npx prisma db push
 npx prisma generate
 ================================================================================
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+warning: in the working copy of 'fleetnova-backend/prisma/schema.prisma', LF will be replaced by CRLF the next time Git touches it
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   DEPLOYMENT-STEPS.txt
+        modified:   fleetnova-backend/controllers/orderController.js
+        modified:   fleetnova-backend/prisma/schema.prisma
+        modified:   fleetnova-backend/server.js
+        new file:   fleetnova-frontend/src/pages/orders/Orders copy.jsx
+        modified:   fleetnova-frontend/src/pages/orders/Orders.jsx
+        new file:   fleetnova-frontend/src/pages/orders/TrackOrder copy 2.jsx
+        new file:   fleetnova-frontend/src/pages/orders/TrackOrder copy.jsx
+        modified:   fleetnova-frontend/src/pages/orders/TrackOrder.jsx
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "updated tracking"
+[main fe1c508] updated tracking
+ 9 files changed, 2532 insertions(+), 240 deletions(-)
+ create mode 100644 fleetnova-frontend/src/pages/orders/Orders copy.jsx
+ create mode 100644 fleetnova-frontend/src/pages/orders/TrackOrder copy 2.jsx
+ create mode 100644 fleetnova-frontend/src/pages/orders/TrackOrder copy.jsx
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push
+Enumerating objects: 32, done.
+Counting objects: 100% (32/32), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (18/18), done.
+Writing objects: 100% (18/18), 14.72 KiB | 1.47 MiB/s, done.
+Total 18 (delta 14), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (14/14), completed with 11 local objects.
+To https://github.com/gvnaresshuser/FleetNova.git
+   2bd8ee5..fe1c508  main -> main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 ================================================================================
 ================================================================================
 ================================================================================

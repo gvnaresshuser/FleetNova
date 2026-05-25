@@ -17,6 +17,8 @@ import API from '../../services/api';
 import Loader from '../../components/common/Loader';
 import PageTransition from '../../components/common/PageTransition';
 import { io } from 'socket.io-client';
+import Swal from 'sweetalert2';
+import 'animate.css';
 
 const pickupIcon = new L.Icon({
     iconUrl:
@@ -124,9 +126,95 @@ const TrackOrder = ({ startLoading }) => {
     const handleReachedDestination =
         async () => {
             try {
-                alert(
+                /* alert(
                     '🚚 Vehicle Reached Destination'
-                );
+                ); */
+               /*  Swal.fire({
+
+                    title:
+                        'Destination Reached',
+
+                    text:
+                        '🚚 Vehicle has successfully reached the destination.',
+
+                    icon: 'success',
+
+                    confirmButtonText:
+                        'Awesome',
+
+                    background: '#ffffff',
+
+                    color: '#1e293b',
+
+                    confirmButtonColor:
+                        '#16a34a',
+
+                    timer: 4000,
+
+                    timerProgressBar: true,
+
+                }); */
+                Swal.fire({
+
+                    title:
+                        '🚚 Delivery Completed',
+
+                    html: `
+
+        <div style="font-size:16px">
+
+            <p>
+
+                Vehicle successfully reached destination.
+
+            </p>
+
+            <br/>
+
+            <b>
+                Order:
+            </b>
+
+            ${order?.orderNumber}
+
+            <br/>
+
+            <b>
+                Customer:
+            </b>
+
+            ${order?.customerName}
+
+        </div>
+
+    `,
+
+                    icon: 'success',
+
+                    confirmButtonColor:
+                        '#16a34a',
+
+                    background: '#f8fafc',
+
+                    timer: 5000,
+
+                    timerProgressBar: true,
+
+                    showClass: {
+
+                        popup:
+                            'animate__animated animate__zoomIn'
+
+                    },
+
+                    hideClass: {
+
+                        popup:
+                            'animate__animated animate__zoomOut'
+
+                    }
+
+                });
                 await API.put(
                     `/orders/${order.id}`,
                     {
@@ -535,67 +623,66 @@ gap-4
 mb-6
 ">
 
-    <h1 className="
+                <h1 className="
     text-2xl
     md:text-3xl
     font-bold
     ">
 
-        Live Order Tracking
+                    Live Order Tracking
 
-    </h1>
+                </h1>
 
-    <div className="
+                <div className="
     flex
     items-center
     gap-3
     ">
 
-        <span className="font-semibold">
+                    <span className="font-semibold">
 
-            {
-                simulationMode
-                    ? '🟢 Simulator Mode'
-                    : '📡 Live GPS Mode'
-            }
+                        {
+                            simulationMode
+                                ? '🟢 Simulator Mode'
+                                : '📡 Live GPS Mode'
+                        }
 
-        </span>
+                    </span>
 
-        <button
+                    <button
 
-            onClick={() =>
-                setSimulationMode(
-                    !simulationMode
-                )
-            }
+                        onClick={() =>
+                            setSimulationMode(
+                                !simulationMode
+                            )
+                        }
 
-            className={`
+                        className={`
             px-4 py-2
             rounded-full
             text-white
             font-bold
             transition-all
 
-            ${
-                simulationMode
-                    ? 'bg-orange-500'
-                    : 'bg-green-600'
-            }
+            ${simulationMode
+                                ? 'bg-orange-500'
+                                : 'bg-green-600'
+                            }
         `}
-        >
+                    >
 
-            {
-                simulationMode
-                    ? 'Switch To Live'
-                    : 'Switch To Simulator'
-            }
+                        {
+                            simulationMode
+                                ? 'Switch To Live'
+                                : 'Switch To Simulator'
+                        }
 
-        </button>
+                    </button>
 
-    </div>
+                </div>
 
-</div>
-<div className="space-y-6"> 
+            </div>
+            <div className="space-y-6">
                 {/* ORDER INFO */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <div className="
@@ -682,7 +769,7 @@ mb-6
                         </p>
                     </div>
                 </div>
-               
+
                 {/* LIVE MAP */}
                 <div className="
                             bg-white
@@ -691,7 +778,7 @@ mb-6
                             overflow-hidden
                             border
                             ">
-                   
+
                     <MapContainer
                         center={currentPosition}
                         zoom={13}
