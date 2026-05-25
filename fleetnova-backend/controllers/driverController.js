@@ -134,3 +134,45 @@ export const getDrivers = async (req, res) => {
     }
 
 };
+export const updateDriver = async (
+    req,
+    res
+) => {
+    try {
+        const { id } = req.params;
+        const {
+            name,
+            email,
+            mobile,
+            licenseNumber,
+            experience,
+            status,
+        } = req.body;
+        const driver =
+            await prisma.driver.update({
+                where: {
+                    id: Number(id),
+                },
+                data: {
+                    name,
+                    email,
+                    mobile,
+                    licenseNumber,
+                    experience: Number(experience),
+                    status,
+                },
+            });
+        res.status(200).json({
+            success: true,
+            message:
+               'Driver updated successfully',
+            driver,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};

@@ -221,3 +221,86 @@ export const deleteOrder = async (
     }
 
 };
+
+export const updateOrder = async (
+    req,
+    res
+) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+
+            orderNumber,
+            customerName,
+            pickupLocation,
+            dropLocation,
+            amount,
+            status,
+            vehicleId,
+            driverId,
+
+        } = req.body;
+
+        const updatedOrder =
+            await prisma.order.update({
+
+                where: {
+
+                    id: Number(id),
+
+                },
+
+                data: {
+
+                    orderNumber,
+
+                    customerName,
+
+                    pickupLocation,
+
+                    dropLocation,
+
+                    amount:
+                        parseFloat(amount),
+
+                    status,
+
+                    vehicleId:
+                        Number(vehicleId),
+
+                    driverId:
+                        Number(driverId),
+
+                },
+
+            });
+
+        res.status(200).json({
+
+            success: true,
+
+            message:
+                'Order updated successfully',
+
+            updatedOrder,
+
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success: false,
+
+            message: error.message,
+
+        });
+
+    }
+
+};

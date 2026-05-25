@@ -1,10 +1,10 @@
 import express from 'express';
 
 import {
-
     createOrder,
     getOrders,
     deleteOrder,
+    updateOrder,
 
 } from '../controllers/orderController.js';
 
@@ -32,5 +32,6 @@ router.delete(
     isAuthenticated,
     deleteOrder
 );
+router.put('/:id', updateOrder);
 
 export default router;

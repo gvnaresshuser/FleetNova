@@ -7,52 +7,47 @@ import {
     FaMapMarkedAlt,
     FaChartBar,
     FaTimes,
-    FaBox
+    FaBox,
+    FaSignOutAlt
 } from 'react-icons/fa';
 
 import {
     Link,
     Outlet,
+    useNavigate,
 } from 'react-router-dom';
 import NotificationBell from '../components/common/NotificationBell';
 
 const MainLayout = () => {
-
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const closeSidebar = () => {
-
         if (window.innerWidth < 768) {
-
             setSidebarOpen(false);
-
         }
-
+    };
+    const logout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
     };
 
     return (
-
         <div className="flex min-h-screen bg-gray-100 overflow-hidden">
-
             {/* Overlay */}
-
             {
                 sidebarOpen && (
-
                     <div
                         className="fixed inset-0 bg-black/50 z-40 md:hidden"
                         onClick={() => setSidebarOpen(false)}
                     />
-
                 )
             }
-
             {/* Sidebar */}
-
             <div
                 className={`
                     fixed top-0 left-0 z-[1000]
-                    bg-blue-900 text-white
+                    bg-blue-900 text-white flex flex-col
                     w-64 h-screen
                     transform
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -62,28 +57,19 @@ const MainLayout = () => {
                     overflow-y-auto
                 `}
             >
-
                 {/* Logo + Close */}
-
                 <div className="p-5 flex items-center justify-between border-b border-blue-700">
-
                     <h1 className="text-2xl font-bold">
-
                         FleetNova
-
                     </h1>
-
                     {/* Close Button */}
-
                     <button
                         className="md:hidden text-2xl"
                         onClick={() => setSidebarOpen(false)}
                     >
                         <FaTimes />
                     </button>
-
                 </div>
-
                 {/* Menu */}
 
                 <nav className="p-4 space-y-3">
@@ -141,7 +127,31 @@ const MainLayout = () => {
                         <FaBox />
                         Orders
                     </Link>
+                    <div className="p-4 mt-auto">
 
+                        <button
+                            onClick={logout}
+                            className="
+            w-full
+            flex
+            items-center
+            gap-3
+            bg-red-500
+            hover:bg-red-600
+            p-3
+            rounded-lg
+            transition
+            font-semibold
+        "
+                        >
+
+                            <FaSignOutAlt />
+
+                            Logout
+
+                        </button>
+
+                    </div>
                 </nav>
 
             </div>
@@ -186,32 +196,18 @@ const MainLayout = () => {
             md:text-2xl
             font-bold
             text-blue-900
-            truncate
-        "
-                    >
-
+            truncate">
                         FleetNova Dashboard
-
                     </h1>
-
                     <NotificationBell />
-
                 </header>
-
                 {/* Page Content */}
-
                 <main className="flex-1 overflow-auto p-4 md:p-6">
-
                     <Outlet />
-
                 </main>
-
             </div>
-
         </div>
-
     );
-
 };
 
 export default MainLayout;

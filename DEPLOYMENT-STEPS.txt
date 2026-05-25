@@ -987,7 +987,51 @@ git status
 git commit -m "Fix production socket URL"
 git push
 ================================================================================
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   DEPLOYMENT-STEPS.txt
+        new file:   DEPLOYMENT/11.png
+        modified:   fleetnova-backend/server.js
+        modified:   fleetnova-frontend/src/.env.production
+        modified:   fleetnova-frontend/src/pages/orders/TrackOrder.jsx
+        modified:   fleetnova-frontend/src/pages/tracking/LiveTracking.jsx
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "Fix production socket URL"
+[main 5777d94] Fix production socket URL
+ 6 files changed, 187 insertions(+), 74 deletions(-)
+ create mode 100644 DEPLOYMENT/11.png
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push
+Enumerating objects: 28, done.
+Counting objects: 100% (28/28), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (14/14), done.
+Writing objects: 100% (15/15), 117.62 KiB | 10.69 MiB/s, done.
+Total 15 (delta 9), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (9/9), completed with 9 local objects.
+To https://github.com/gvnaresshuser/FleetNova.git
+   5442357..5777d94  main -> main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 ================================================================================
+naresh@gmail.com
+123456
+
+driver@gmail.com
+123456
+
+driver2@gmail.com
+123456
 ================================================================================
 ================================================================================
 ================================================================================

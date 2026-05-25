@@ -5,7 +5,7 @@ import API from '../../services/api';
 import Loader from '../../components/common/Loader';
 import PageTransition from '../../components/common/PageTransition';
 import { Link } from 'react-router-dom';
-
+import { FaEdit } from 'react-icons/fa';
 const Orders = ({ startLoading }) => {
 
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,11 @@ const Orders = ({ startLoading }) => {
         vehicleId: '',
         driverId: '',
     });
+    const [editModal, setEditModal] =
+        useState(false);
 
+    const [selectedOrder, setSelectedOrder] =
+        useState(null);
     const fetchOrders = async () => {
 
         try {
@@ -173,6 +177,84 @@ const Orders = ({ startLoading }) => {
             console.log(error);
 
             toast.error('Failed to delete order');
+
+        }
+
+    };
+    const openEditModal = (order) => {
+
+        setSelectedOrder({
+
+            ...order,
+
+            vehicleId:
+                order.vehicleId || '',
+
+            driverId:
+                order.driverId || '',
+
+        });
+
+        setEditModal(true);
+
+    };
+    const handleEditChange = (e) => {
+
+        setSelectedOrder({
+
+            ...selectedOrder,
+
+            [e.target.name]:
+                e.target.value,
+
+        });
+
+    };
+    const updateOrder = async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            await API.put(
+
+                `/orders/${selectedOrder.id}`,
+
+                {
+
+                    ...selectedOrder,
+
+                    amount: parseFloat(
+                        selectedOrder.amount
+                    ),
+
+                    vehicleId: Number(
+                        selectedOrder.vehicleId
+                    ),
+
+                    driverId: Number(
+                        selectedOrder.driverId
+                    ),
+
+                }
+
+            );
+
+            toast.success(
+                'Order updated successfully'
+            );
+
+            setEditModal(false);
+
+            fetchOrders();
+
+        } catch (error) {
+
+            console.log(error);
+
+            toast.error(
+                'Failed to update order'
+            );
 
         }
 
@@ -469,71 +551,55 @@ const Orders = ({ startLoading }) => {
                                             </span>
 
                                         </td>
-                                    {/*     <td className="p-4">
 
-                                            <Link
-                                                to={`/track-order/${order.id}`}
-                                                className="
-                                                bg-blue-900
-                                                hover:bg-blue-800
-                                                text-white
-                                                px-4 py-2
-                                                rounded-lg
-                                            "
-                                            >
 
-                                                Track
-
-                                            </Link>
-
-                                        </td> */}
                                         <td className="p-4">
 
                                             <div className="flex gap-2">
+                                                <button
+                                                    onClick={() =>
+                                                        openEditModal(order)
+                                                    }
+                                                    className="
+                                            bg-orange-500
+                                            hover:bg-orange-600
+                                            text-white
+                                            px-3 py-2
+                                            rounded-lg
+                                            text-sm
+                                            ">
+                                                    <FaEdit />
+                                                </button>
 
                                                 <Link
                                                     to={`/track-order/${order.id}`}
                                                     className="
-                bg-blue-900
-                hover:bg-blue-800
-                text-white
-                px-4 py-2
-                rounded-lg
-                text-sm
-            "
-                                                >
-
+                                                    bg-blue-900
+                                                    hover:bg-blue-800
+                                                    text-white
+                                                    px-4 py-2
+                                                    rounded-lg
+                                                    text-sm">
                                                     Track
-
                                                 </Link>
-
                                                 <button
                                                     onClick={() =>
                                                         handleDelete(order.id)
                                                     }
                                                     className="
-                bg-red-500
-                hover:bg-red-600
-                text-white
-                px-4 py-2
-                rounded-lg
-                text-sm
-            "
-                                                >
-
+                                                    bg-red-500
+                                                    hover:bg-red-600
+                                                    text-white
+                                                    px-4 py-2
+                                                    rounded-lg
+                                                    text-sm">
                                                     Delete
-
                                                 </button>
-
                                             </div>
-
                                         </td>
-
                                     </tr>
-
                                 ))
                             }
-
                         </tbody>
 
                     </table>
@@ -541,7 +607,192 @@ const Orders = ({ startLoading }) => {
                 </div>
 
             </div>
+            {
+                editModal &&
+                selectedOrder && (
 
+                    <div
+                        className="
+                fixed inset-0
+                bg-black/50
+                flex items-center
+                justify-center
+                z-50
+            "
+                    >
+
+                        <div
+                            className="
+                    bg-white
+                    rounded-2xl
+                    shadow-2xl
+                    p-6
+                    w-full
+                    max-w-2xl
+                "
+                        >
+
+                            <div className="flex justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-blue-900">
+                                    Edit Order
+                                </h2>
+                                <button
+                                    onClick={() =>
+                                        setEditModal(false)
+                                    }
+                                    className="
+                            text-red-500
+                            text-xl
+                            font-bold">
+                                    ✕
+                                </button>
+                            </div>
+                            <form
+                                onSubmit={updateOrder}
+                                className="
+                        grid
+                        grid-cols-1
+                        md:grid-cols-2
+                        gap-4">
+                                <input
+                                    type="text"
+                                    name="orderNumber"
+                                    value={selectedOrder.orderNumber}
+                                    onChange={handleEditChange}
+                                    placeholder="Order Number"
+                                    className="border rounded-lg p-3"
+                                />
+
+                                <input
+                                    type="text"
+                                    name="customerName"
+                                    value={selectedOrder.customerName}
+                                    onChange={handleEditChange}
+                                    placeholder="Customer Name"
+                                    className="border rounded-lg p-3"
+                                />
+
+                                <input
+                                    type="text"
+                                    name="pickupLocation"
+                                    value={selectedOrder.pickupLocation}
+                                    onChange={handleEditChange}
+                                    placeholder="Pickup Location"
+                                    className="border rounded-lg p-3"
+                                />
+
+                                <input
+                                    type="text"
+                                    name="dropLocation"
+                                    value={selectedOrder.dropLocation}
+                                    onChange={handleEditChange}
+                                    placeholder="Drop Location"
+                                    className="border rounded-lg p-3"
+                                />
+
+                                <input
+                                    type="number"
+                                    name="amount"
+                                    value={selectedOrder.amount}
+                                    onChange={handleEditChange}
+                                    placeholder="Amount"
+                                    className="border rounded-lg p-3"
+                                />
+
+                                <select
+                                    name="status"
+                                    value={selectedOrder.status}
+                                    onChange={handleEditChange}
+                                    className="border rounded-lg p-3"
+                                >
+
+                                    <option value="PENDING">
+                                        PENDING
+                                    </option>
+
+                                    <option value="IN_PROGRESS">
+                                        IN_PROGRESS
+                                    </option>
+
+                                    <option value="COMPLETED">
+                                        COMPLETED
+                                    </option>
+
+                                </select>
+
+                                <select
+                                    name="vehicleId"
+                                    value={selectedOrder.vehicleId}
+                                    onChange={handleEditChange}
+                                    className="border rounded-lg p-3"
+                                >
+
+                                    {
+                                        vehicles.map((vehicle) => (
+
+                                            <option
+                                                key={vehicle.id}
+                                                value={vehicle.id}
+                                            >
+
+                                                {vehicle.vehicleNumber}
+
+                                            </option>
+
+                                        ))
+                                    }
+
+                                </select>
+
+                                <select
+                                    name="driverId"
+                                    value={selectedOrder.driverId}
+                                    onChange={handleEditChange}
+                                    className="border rounded-lg p-3"
+                                >
+
+                                    {
+                                        drivers.map((driver) => (
+
+                                            <option
+                                                key={driver.id}
+                                                value={driver.id}
+                                            >
+
+                                                {driver.name}
+
+                                            </option>
+
+                                        ))
+                                    }
+
+                                </select>
+
+                                <button
+                                    type="submit"
+                                    className="
+                            md:col-span-2
+                            bg-blue-900
+                            hover:bg-blue-800
+                            text-white
+                            p-3
+                            rounded-lg
+                            font-bold
+                        "
+                                >
+
+                                    Update Order
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                )
+            }
         </PageTransition>
 
     );

@@ -3,6 +3,7 @@ import express from 'express';
 import {
     createDriver,
     getDrivers,
+    updateDriver,
 } from '../controllers/driverController.js';
 
 import {
@@ -23,6 +24,10 @@ router.get(
     '/',
     isAuthenticated,
     getDrivers
+);
+router.put(
+    '/:id',
+    updateDriver
 );
 
 export default router;
