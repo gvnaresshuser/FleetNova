@@ -49,13 +49,17 @@ export const createOrder = async (req, res) => {
             customerName,
             pickupLocation,
             dropLocation,
+            pickupLatitude,
+            pickupLongitude,
+            dropLatitude,
+            dropLongitude,
             amount,
             status,
             vehicleId,
             driverId,
         } = req.body;
 
-        
+
         const pickupCoordinates =
             await getCoordinates(
                 pickupLocation
@@ -64,33 +68,26 @@ export const createOrder = async (req, res) => {
         const order = await prisma.order.create({
 
             data: {
-
                 orderNumber,
-
                 customerName,
-
                 pickupLocation,
-
                 dropLocation,
-
+                pickupLatitude,
+                pickupLongitude,
+                dropLatitude,
+                dropLongitude,
                 amount: parseFloat(amount),
-
                 status,
-
                 vehicleId: vehicleId
                     ? Number(vehicleId)
                     : null,
-
                 driverId: driverId
                     ? Number(driverId)
                     : null,
-
                 currentLatitude:
                     pickupCoordinates?.latitude,
-
                 currentLongitude:
                     pickupCoordinates?.longitude,
-
             },
 
         });
@@ -136,47 +133,27 @@ export const createOrder = async (req, res) => {
 export const getOrders = async (req, res) => {
 
     try {
-
         const orders = await prisma.order.findMany({
-
             include: {
-
                 vehicle: true,
-
                 driver: true,
-
             },
-
             orderBy: {
-
                 createdAt: 'desc',
-
             },
-
         });
 
         res.status(200).json({
-
             success: true,
-
             orders,
-
         });
-
     } catch (error) {
-
         console.log(error);
-
         res.status(500).json({
-
             success: false,
-
             message: error.message,
-
         });
-
     }
-
 };
 export const deleteOrder = async (
     req,
@@ -232,11 +209,14 @@ export const updateOrder = async (
         const { id } = req.params;
 
         const {
-
             orderNumber,
             customerName,
             pickupLocation,
             dropLocation,
+            pickupLatitude,
+            pickupLongitude,
+            dropLatitude,
+            dropLongitude,
             amount,
             status,
             vehicleId,
@@ -254,53 +234,35 @@ export const updateOrder = async (
                 },
 
                 data: {
-
                     orderNumber,
-
                     customerName,
-
                     pickupLocation,
-
                     dropLocation,
-
+                    pickupLatitude,
+                    pickupLongitude,
+                    dropLatitude,
+                    dropLongitude,
                     amount:
                         parseFloat(amount),
-
                     status,
-
                     vehicleId:
                         Number(vehicleId),
-
                     driverId:
                         Number(driverId),
-
                 },
-
             });
 
         res.status(200).json({
-
             success: true,
-
             message:
                 'Order updated successfully',
-
             updatedOrder,
-
         });
-
     } catch (error) {
-
         console.log(error);
-
         res.status(500).json({
-
             success: false,
-
             message: error.message,
-
         });
-
     }
-
 };

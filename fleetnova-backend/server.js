@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 
 import http from 'http';
-
 import { Server } from 'socket.io';
 
 import authRoutes from './routes/authRoutes.js';
@@ -68,45 +67,102 @@ app.get('/', (req, res) => {
 let vehicles = [];
 
 io.on('connection', (socket) => {
-
     console.log(`⚡ User Connected: ${socket.id}`);
-
     socket.on('send-location', (data) => {
+        console.log(
+            '\n📍 Incoming GPS Data ::'
+        );
 
+        console.log(data);
+
+        console.log(
+            'Vehicle ID ::',
+            data.vehicleId
+        );
+
+        console.log(
+            'Latitude ::',
+            data.latitude
+        );
+
+        console.log(
+            'Longitude ::',
+            data.longitude
+        );
+
+        console.log(
+            'Status ::',
+            data.status
+        );
         const existingVehicle = vehicles.find(
             (v) => v.id === data.id
         );
-
         if (existingVehicle) {
-
-            existingVehicle.latitude = data.latitude;
+            console.log(
+                '\n♻️ Updating Existing Vehicle'
+            );
+           /*  existingVehicle.latitude = data.latitude;
             existingVehicle.longitude = data.longitude;
-            existingVehicle.status = data.status;
+            existingVehicle.status = data.status; */
+            existingVehicle.vehicleId =
+                data.vehicleId;
 
+            existingVehicle.latitude =
+                data.latitude;
+
+            existingVehicle.longitude =
+                data.longitude;
+
+            existingVehicle.status =
+                data.status;
+
+            existingVehicle.vehicleNumber =
+                data.vehicleNumber;
+
+            existingVehicle.vehicleType =
+                data.vehicleType;
+
+            existingVehicle.driver =
+                data.driver;
+
+            existingVehicle.destination =
+                data.destination;
+
+            existingVehicle.eta =
+                data.eta;
         } else {
-
+            console.log(
+                '\n🆕 Adding New Vehicle'
+            );
+            console.log(
+                'Incoming Data ::',
+                data
+            );
             vehicles.push(data);
-
         }
+        console.log(
+            '\n🚚 Vehicles Array ::'
+        );
 
+        console.log(vehicles);
+
+        console.log(
+            '\n📡 Emitting receive-vehicles'
+        );
         io.emit('receive-vehicles', vehicles);
+        console.log(
+            '\n📡 Emitting receive-location'
+        );
 
         io.emit('receive-location', data);
-
     });
 
     socket.on('disconnect', () => {
-
         console.log(`❌ User Disconnected: ${socket.id}`);
-
     });
-
 });
 
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, () => {
-
     console.log(`🚀 Server running on port ${PORT}`);
-
 });

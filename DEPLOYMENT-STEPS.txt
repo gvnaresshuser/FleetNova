@@ -581,6 +581,54 @@ LIVE FRONTEND URL:
 =================
 https://fleetnova-frontend.onrender.com
 =============================================================================
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git add .
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   DEPLOYMENT-STEPS.txt
+        new file:   DEPLOYMENT/12.png
+        modified:   DEPLOYMENT/9.png
+        new file:   FleetNova-24-05-2026.zip
+        new file:   fleetnova-backend.zip
+        modified:   fleetnova-backend/controllers/driverController.js
+        modified:   fleetnova-backend/controllers/orderController.js
+        modified:   fleetnova-backend/routes/driverRoutes.js
+        modified:   fleetnova-backend/routes/orderRoutes.js
+        new file:   fleetnova-frontend.zip
+        modified:   fleetnova-frontend/src/layouts/MainLayout.jsx
+        modified:   fleetnova-frontend/src/pages/auth/Login.jsx
+        modified:   fleetnova-frontend/src/pages/drivers/Drivers.jsx
+        modified:   fleetnova-frontend/src/pages/orders/Orders.jsx
+        modified:   fleetnova-frontend/src/pages/orders/TrackOrder.jsx
+
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git commit -m "updated fe and be"
+[main 2bd8ee5] updated fe and be
+ 15 files changed, 1039 insertions(+), 655 deletions(-)
+ create mode 100644 DEPLOYMENT/12.png
+ create mode 100644 FleetNova-24-05-2026.zip
+ create mode 100644 fleetnova-backend.zip
+ create mode 100644 fleetnova-frontend.zip
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>git push
+Enumerating objects: 51, done.
+Counting objects: 100% (51/51), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (25/25), done.
+Writing objects: 100% (28/28), 27.97 MiB | 1.26 MiB/s, done.
+Total 28 (delta 16), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (16/16), completed with 16 local objects.
+To https://github.com/gvnaresshuser/FleetNova.git
+   5777d94..2bd8ee5  main -> main
+
+E:\MURALI\REACT-JS-CRASH-COURSE\FleetNova>
 =============================================================================
 =============================================================================
 =============================================================================
@@ -1033,6 +1081,20 @@ driver@gmail.com
 driver2@gmail.com
 123456
 ================================================================================
+STEP 1 — UPDATE PRISMA MODEL 🚀🔥
+
+Inside schema.prisma
+
+Add in Order model:
+
+pickupLatitude       Float?
+pickupLongitude      Float?
+
+dropLatitude         Float?
+dropLongitude        Float?
+THEN RUN 🚀🔥
+npx prisma db push
+npx prisma generate
 ================================================================================
 ================================================================================
 ================================================================================

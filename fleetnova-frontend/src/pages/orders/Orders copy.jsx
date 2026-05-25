@@ -22,54 +22,11 @@ const Orders = ({ startLoading }) => {
         vehicleId: '',
         driverId: '',
     });
-    const [editModal, setEditModal] = useState(false);
+    const [editModal, setEditModal] =
+        useState(false);
 
-    const [selectedOrder, setSelectedOrder] = useState(null);
-    const getCoordinates =
-        async (location) => {
-            try {
-              /*   const response =
-                    await fetch(
-                        `https://nominatim.openstreetmap.org/search?format=json&q=${location}`
-                    ); */
-                const response =
-                    await fetch(
-
-                        `https://nominatim.openstreetmap.org/search?format=json&q=${location}`,
-
-                        {
-
-                            headers: {
-
-                                'User-Agent':
-                                    'FleetNovaApp'
-
-                            }
-
-                        }
-
-                    );
-                const data =
-                    await response.json();
-                if (data.length > 0) {
-                    return {
-                        latitude:
-                            parseFloat(
-                                data[0].lat
-                            ),
-                        longitude:
-                            parseFloat(
-                                data[0].lon
-                            ),
-                    };
-                }
-                return null;
-            } catch (error) {
-                console.log(error);
-                return null;
-            }
-        };
-
+    const [selectedOrder, setSelectedOrder] =
+        useState(null);
     const fetchOrders = async () => {
 
         try {
@@ -118,49 +75,11 @@ const Orders = ({ startLoading }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const pickupCoords =
-                await getCoordinates(
-                    formData.pickupLocation
-                );
-
-            const dropCoords =
-                await getCoordinates(
-                    formData.dropLocation
-                );
-            /* await API.post('/orders', {
+            await API.post('/orders', {
                 ...formData,
                 amount: parseFloat(formData.amount),
                 vehicleId: Number(formData.vehicleId),
                 driverId: Number(formData.driverId),
-            }); */
-            await API.post('/orders', {
-
-                ...formData,
-
-                amount: parseFloat(
-                    formData.amount
-                ),
-
-                vehicleId: Number(
-                    formData.vehicleId
-                ),
-
-                driverId: Number(
-                    formData.driverId
-                ),
-
-                pickupLatitude:
-                    pickupCoords?.latitude,
-
-                pickupLongitude:
-                    pickupCoords?.longitude,
-
-                dropLatitude:
-                    dropCoords?.latitude,
-
-                dropLongitude:
-                    dropCoords?.longitude,
-
             });
             toast.success('Order created successfully');
             setFormData({
@@ -213,79 +132,34 @@ const Orders = ({ startLoading }) => {
         });
     };
     const updateOrder = async (e) => {
-
         e.preventDefault();
-
         try {
-
-            // GET NEW PICKUP COORDINATES
-
-            const pickupCoords =
-                await getCoordinates(
-                    selectedOrder.pickupLocation
-                );
-
-            // GET NEW DROP COORDINATES
-
-            const dropCoords =
-                await getCoordinates(
-                    selectedOrder.dropLocation
-                );
-
             await API.put(
-
                 `/orders/${selectedOrder.id}`,
-
                 {
-
                     ...selectedOrder,
-
                     amount: parseFloat(
                         selectedOrder.amount
                     ),
-
                     vehicleId: Number(
                         selectedOrder.vehicleId
                     ),
-
                     driverId: Number(
                         selectedOrder.driverId
                     ),
-
-                    pickupLatitude:
-                        pickupCoords?.latitude,
-
-                    pickupLongitude:
-                        pickupCoords?.longitude,
-
-                    dropLatitude:
-                        dropCoords?.latitude,
-
-                    dropLongitude:
-                        dropCoords?.longitude,
-
                 }
-
             );
-
             toast.success(
                 'Order updated successfully'
             );
-
             setEditModal(false);
-
             fetchOrders();
-
         } catch (error) {
-
             console.log(error);
-
             toast.error(
                 'Failed to update order'
             );
-
         }
-
     };
     if (loading) {
         return <Loader />;

@@ -67,7 +67,6 @@ const TrackOrder = ({ startLoading }) => {
     console.log(
         'TrackOrder Component Loaded'
     );
-    const [simulationMode, setSimulationMode] = useState(true);
     const [locationAddress, setLocationAddress] = useState('');
     const [pathCoordinates, setPathCoordinates] = useState([]);
     const [liveLocation, setLiveLocation] = useState(null);
@@ -113,7 +112,6 @@ const TrackOrder = ({ startLoading }) => {
             );
             console.log(data);
             setOrder(data.order);
-            setPathCoordinates([]);
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -130,31 +128,8 @@ const TrackOrder = ({ startLoading }) => {
                 await API.put(
                     `/orders/${order.id}`,
                     {
-
-                        orderNumber:
-                            order?.orderNumber,
-
-                        customerName:
-                            order?.customerName,
-
-                        pickupLocation:
-                            order?.pickupLocation,
-
-                        dropLocation:
-                            order?.dropLocation,
-
-                        amount:
-                            order?.amount,
-
-                        vehicleId:
-                            order?.vehicleId,
-
-                        driverId:
-                            order?.driverId,
-
                         status:
-                            'COMPLETED',
-
+                            'COMPLETED'
                     }
                 );
                 fetchOrder();
@@ -163,11 +138,22 @@ const TrackOrder = ({ startLoading }) => {
             }
         };
     //------------------------------------------------------------------
-
     useEffect(() => {
         startLoading();
         fetchOrder();
     }, []);
+
+    /*     useEffect(() => {
+            setInterval(() => {
+    
+                const latitude =
+                    17.7332 + Math.random() * 0.001;
+    
+                const longitude =
+                    83.3262 + Math.random() * 0.001;
+    
+            }, 3000);
+        }, []); */
 
 
     useEffect(() => {
@@ -175,7 +161,7 @@ const TrackOrder = ({ startLoading }) => {
             'receive-vehicles',
             (vehicles) => {
                 console.log(
-                    'Received Vehicles ::',
+                    'Vehicles ::',
                     vehicles
                 );
                 const currentVehicle =
@@ -265,243 +251,64 @@ const TrackOrder = ({ startLoading }) => {
     }, [order]);
     //---------------------- SIMULATION -------------------------------
     useEffect(() => {
-        if (
-            !simulationMode ||
-            !order?.dropLatitude ||
-            !order?.dropLongitude ||
-            order?.status ===
-            'COMPLETED'
-        ) {
-            return;
-        }
 
-        let latitude =
-            order?.pickupLatitude ||
-            17.7332;
+        let latitude = 17.7332;
 
-        let longitude =
-            order?.pickupLongitude ||
-            83.3262;
+        let longitude = 83.3262;
 
-        const interval =
-            setInterval(() => {
+        const interval = setInterval(() => {
 
-                const targetLat =
-                    order.dropLatitude;
+            latitude += 0.0005;
 
-                const targetLng =
-                    order.dropLongitude;
+            longitude += 0.0005;
 
-                const step = 0.0005;
-
-                // MOVE TOWARDS DESTINATION
-
-                if (
-                    latitude < targetLat
-                ) {
-                    latitude += step;
-                } else {
-                    latitude -= step;
-                }
-
-                if (
-                    longitude < targetLng
-                ) {
-                    longitude += step;
-                } else {
-                    longitude -= step;
-                }
-
-                console.log(
-                    '🚚 Simulated Movement ::',
-                    latitude,
-                    longitude
-                );
-
-                socket.emit(
-                    'send-location',
-                    {
-
-                        vehicleId:
-                            order?.vehicleId,
-
-                        latitude,
-
-                        longitude,
-
-                        status:
-                            'ACTIVE',
-
-                        vehicleNumber:
-                            order?.vehicle
-                                ?.vehicleNumber,
-
-                        vehicleType:
-                            order?.vehicle
-                                ?.vehicleType,
-
-                        driver:
-                            order?.driver
-                                ?.name,
-
-                        destination:
-                            order?.dropLocation,
-
-                        eta:
-                            'Updating...',
-
-                    }
-                );
-
-                // DESTINATION REACHED
-
-                const distanceLat =
-                    Math.abs(
-                        latitude -
-                        targetLat
-                    );
-
-                const distanceLng =
-                    Math.abs(
-                        longitude -
-                        targetLng
-                    );
-
-                if (
-                    distanceLat <
-                    0.0005 &&
-                    distanceLng <
-                    0.0005
-                ) {
-
-                    console.log(
-                        '✅ Destination Reached'
-                    );
-
-                    clearInterval(
-                        interval
-                    );
-
-                }
-
-            }, 3000);
-
-        return () =>
-            clearInterval(
-                interval
+            console.log(
+                '🚚 Simulated Movement ::',
+                latitude,
+                longitude
             );
 
-    }, [order, simulationMode]);
-    //---------------------- SIMULATION -------------------------------
-    useEffect(() => {
-
-        if (
-            simulationMode ||
-            !order?.vehicleId
-        ) {
-
-            return;
-
-        }
-
-        if (
-            !navigator.geolocation
-        ) {
-
-            alert(
-                'Geolocation not supported'
-            );
-
-            return;
-
-        }
-
-        const watchId =
-            navigator.geolocation.watchPosition(
-
-                (position) => {
-
-                    const latitude =
-                        position.coords.latitude;
-
-                    const longitude =
-                        position.coords.longitude;
-
-                    console.log(
-                        '📡 Live GPS ::',
-                        latitude,
-                        longitude
-                    );
-
-                    socket.emit(
-                        'send-location',
-                        {
-
-                            vehicleId:
-                                order?.vehicleId,
-
-                            latitude,
-
-                            longitude,
-
-                            status:
-                                'ACTIVE',
-
-                            vehicleNumber:
-                                order?.vehicle
-                                    ?.vehicleNumber,
-
-                            vehicleType:
-                                order?.vehicle
-                                    ?.vehicleType,
-
-                            driver:
-                                order?.driver
-                                    ?.name,
-
-                            destination:
-                                order?.dropLocation,
-
-                            eta:
-                                'Updating...',
-
-                        }
-                    );
-
-                },
-
-                (error) => {
-
-                    console.log(error);
-
-                },
-
+            socket.emit(
+                'send-location',
                 {
 
-                    enableHighAccuracy:
-                        true,
+                    vehicleId:
+                        order?.vehicleId,
 
-                    maximumAge: 0,
+                    latitude,
 
-                    timeout: 5000,
+                    longitude,
+
+                    status: 'ACTIVE',
+
+                    vehicleNumber:
+                        order?.vehicle
+                            ?.vehicleNumber,
+
+                    vehicleType:
+                        order?.vehicle
+                            ?.vehicleType,
+
+                    driver:
+                        order?.driver
+                            ?.name,
+
+                    destination:
+                        order?.dropLocation,
+
+                    eta: 'Updating...',
 
                 }
-
             );
 
-        return () => {
+        }, 3000);
 
-            navigator.geolocation
-                .clearWatch(
-                    watchId
-                );
+        return () =>
+            clearInterval(interval);
 
-        };
+    }, [order]);
+    //---------------------- SIMULATION -------------------------------
 
-    }, [
-        simulationMode,
-        order
-    ]);
     if (loading) {
         return <Loader />;
     }
@@ -525,89 +332,13 @@ const TrackOrder = ({ startLoading }) => {
     }
     return (
         <PageTransition>
-            <div className="
-flex
-flex-col
-md:flex-row
-md:items-center
-md:justify-between
-gap-4
-mb-6
-">
-
-    <h1 className="
-    text-2xl
-    md:text-3xl
-    font-bold
-    ">
-
-        Live Order Tracking
-
-    </h1>
-
-    <div className="
-    flex
-    items-center
-    gap-3
-    ">
-
-        <span className="font-semibold">
-
-            {
-                simulationMode
-                    ? '🟢 Simulator Mode'
-                    : '📡 Live GPS Mode'
-            }
-
-        </span>
-
-        <button
-
-            onClick={() =>
-                setSimulationMode(
-                    !simulationMode
-                )
-            }
-
-            className={`
-            px-4 py-2
-            rounded-full
-            text-white
-            font-bold
-            transition-all
-
-            ${
-                simulationMode
-                    ? 'bg-orange-500'
-                    : 'bg-green-600'
-            }
-        `}
-        >
-
-            {
-                simulationMode
-                    ? 'Switch To Live'
-                    : 'Switch To Simulator'
-            }
-
-        </button>
-
-    </div>
-
-</div>
-<div className="space-y-6"> 
+            <div>
+                <h1 className="text-2xl md:text-3xl font-bold mb-6">
+                    Live Order Tracking
+                </h1>
                 {/* ORDER INFO */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <div className="
-                                bg-white
-                                rounded-2xl
-                                shadow-md
-                                hover:shadow-xl
-                                transition-all
-                                duration-300
-                                p-5
-                                border
-                                ">
+                    <div className="bg-white rounded-xl shadow p-6">
                         <h2 className="text-xl font-bold mb-4">
                             Order Details
                         </h2>
@@ -658,19 +389,12 @@ mb-6
                         </h2>
                         <p className="mb-3">
                             <span
-                                className={`
-                                        text-white
-                                        px-4 py-2
-                                        rounded-full
-                                        font-semibold
-
-                                        ${order?.status === 'COMPLETED'
-                                        ? 'bg-green-600'
-                                        : order?.status === 'ACTIVE'
-                                            ? 'bg-blue-600'
-                                            : 'bg-orange-500'
-                                    }
-                                        `}
+                                className="
+                                   bg-orange-500
+                                   text-white
+                                   px-4 py-2
+                                   rounded-full
+                               "
                             >
                                 {order?.status}
                             </span>
@@ -682,21 +406,13 @@ mb-6
                         </p>
                     </div>
                 </div>
-               
                 {/* LIVE MAP */}
-                <div className="
-                            bg-white
-                            rounded-2xl
-                            shadow-lg
-                            overflow-hidden
-                            border
-                            ">
-                   
+                <div className="bg-white rounded-xl shadow overflow-hidden">
                     <MapContainer
                         center={currentPosition}
                         zoom={13}
                         style={{
-                            height: '75vh',
+                            height: '500px',
                             width: '100%',
                         }}
                         className="z-10"
@@ -745,182 +461,73 @@ mb-6
                             icon={vehicleIcon}
                         >
                             <Popup>
-                                <div className="text-xs leading-1 min-w-[220px]">
-
-                                    <p className="font-bold text-blue-900">
+                                <div className="text-[12px] leading-[0.15] min-w-[170px]">
+                                    <p className="m-0 font-bold text-blue-900">
                                         🚚 FleetNova Vehicle
                                     </p>
-
                                     <hr className="my-1" />
-
-                                    <p>
-                                        Vehicle:
-                                        {' '}
-                                        {order?.vehicle?.vehicleNumber}
+                                    <p className="m-0">
+                                        Vehicle: {order?.vehicle?.vehicleNumber}
                                     </p>
-
-                                    <p>
-                                        Type:
-                                        {' '}
-                                        {order?.vehicle?.vehicleType}
+                                    <p className="m-0">
+                                        Type: {order?.vehicle?.vehicleType}
                                     </p>
-
-                                    <p>
-                                        Driver:
-                                        {' '}
-                                        {order?.driver?.name}
+                                    <p className="m-0">
+                                        Driver: {order?.driver?.name}
                                     </p>
-
                                     <hr className="my-1" />
-
-                                    <p>
-                                        Order:
-                                        {' '}
-                                        {order?.orderNumber}
+                                    <p className="m-0">
+                                        Order: {order?.orderNumber}
                                     </p>
-
-                                    <p>
-                                        Customer:
-                                        {' '}
-                                        {order?.customerName}
+                                    <p className="m-0">
+                                        Customer: {order?.customerName}
                                     </p>
-
-                                    <p>
+                                    <p className="m-0">
                                         Status:
                                         {' '}
-
-                                        <span
-                                            className={`
-            font-bold
-
-            ${order?.status ===
-                                                    'COMPLETED'
-
-                                                    ? 'text-green-600'
-
-                                                    : 'text-orange-500'
-                                                }
-        `}
-                                        >
-
+                                        <span className="text-orange-500 font-bold">
                                             {order?.status}
-
                                         </span>
-
                                     </p>
-
                                     <hr className="my-1" />
-
-                                    <p>
+                                    <p className="m-0">
                                         ETA:
                                         {' '}
-                                        {
-                                            order?.estimatedDeliveryTime ||
-                                            'Updating...'
-                                        }
+                                        {order?.estimatedDeliveryTime || 'Updating...'}
                                     </p>
-
-                                    <p>
+                                    <p className="m-0">
                                         Lat:
                                         {' '}
                                         {currentPosition[0].toFixed(4)}
                                     </p>
-
-                                    <p>
+                                    <p className="m-0">
                                         Lng:
                                         {' '}
                                         {currentPosition[1].toFixed(4)}
                                     </p>
-
-                                    <p className="text-gray-700 leading-4">
-
-                                        📍
+                                    <p className="m-0 leading-4">
+                                        Address:
                                         {' '}
-
-                                        {
-                                            locationAddress ||
-                                            'Fetching location...'
-                                        }
-
+                                        <span className="text-gray-700">
+                                            {locationAddress ||
+                                                'Fetching location...'}
+                                        </span>
                                     </p>
-
                                     {
                                         order?.status ===
                                         'COMPLETED' && (
-
-                                            <p className="text-green-600 font-bold mt-1">
-
+                                            <p
+                                                className="
+                                                text-green-600
+                                                font-bold">
                                                 ✅ Reached Destination
-
                                             </p>
-
                                         )
                                     }
-
                                 </div>
                             </Popup>
                         </Marker>
                     </MapContainer>
-                </div>
-                <div className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-3
-                    gap-4
-                    mt-6
-                    ">
-
-                    <div className="
-                    bg-green-50
-                    border
-                    rounded-xl
-                    p-4
-                    ">
-
-                        <h3 className="font-bold">
-                            📍 Pickup
-                        </h3>
-
-                        <p className="text-sm mt-1">
-                            {order?.pickupLocation}
-                        </p>
-
-                    </div>
-
-                    <div className="
-                    bg-blue-50
-                    border
-                    rounded-xl
-                    p-4
-                    ">
-
-                        <h3 className="font-bold">
-                            🚚 Live Vehicle
-                        </h3>
-
-                        <p className="text-sm mt-1">
-                            {locationAddress}
-                        </p>
-
-                    </div>
-
-                    <div className="
-                    bg-red-50
-                    border
-                    rounded-xl
-                    p-4
-                    ">
-
-                        <h3 className="font-bold">
-                            🏁 Destination
-                        </h3>
-
-                        <p className="text-sm mt-1">
-                            {order?.dropLocation}
-                        </p>
-
-                    </div>
-
                 </div>
             </div>
         </PageTransition>

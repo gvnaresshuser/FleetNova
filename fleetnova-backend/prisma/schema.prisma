@@ -60,6 +60,10 @@ model Order {
   customerName          String
   pickupLocation        String
   dropLocation          String
+  pickupLatitude        Float?
+  pickupLongitude       Float?
+  dropLatitude          Float?
+  dropLongitude         Float?
   amount                Float
   status                String   @default("PENDING")
   createdAt             DateTime @default(now())
